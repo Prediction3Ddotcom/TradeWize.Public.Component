@@ -1,0 +1,19 @@
+import { type ViewStyle, type TextStyle, type TouchableOpacityProps } from 'react-native';
+import type { ReactNode } from 'react';
+export interface ButtonProps extends Omit<TouchableOpacityProps, 'style'> {
+    title?: string;
+    children?: ReactNode;
+    leftIcon?: ReactNode;
+    rightIcon?: ReactNode;
+    iconOnly?: boolean;
+    variant?: 'primary' | 'secondary' | 'outline' | 'ghost' | 'danger' | 'success';
+    size?: 'small' | 'medium' | 'large' | 'xlarge';
+    isLoading?: boolean;
+    isDisabled?: boolean;
+    fullWidth?: boolean;
+    style?: ViewStyle;
+    textStyle?: TextStyle;
+    iconSpacing?: number;
+}
+export declare function Button({ title, children, leftIcon, rightIcon, iconOnly, variant, size, isLoading, isDisabled, fullWidth, style, textStyle, iconSpacing, onPress, ...props }: ButtonProps): import("react/jsx-runtime").JSX.Element;
+//# sourceMappingURL=button.d.ts.map
