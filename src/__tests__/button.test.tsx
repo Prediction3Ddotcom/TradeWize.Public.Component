@@ -29,22 +29,27 @@ describe('Button Component', () => {
 
   it('does not call onPress when loading', () => {
     const mockOnPress = jest.fn();
-    const { getByText } = render(
-      <Button title="Test Button" onPress={mockOnPress} isLoading />
+    const { getByTestId } = render(
+      <Button
+        title="Test Button"
+        onPress={mockOnPress}
+        isLoading
+        testID="button"
+      />
     );
 
-    fireEvent.press(getByText('Test Button'));
+    fireEvent.press(getByTestId('button'));
     expect(mockOnPress).not.toHaveBeenCalled();
   });
 
   it('shows loading indicator when isLoading is true', () => {
-    const { getByTestId } = render(
+    const { getByTestId, queryByText } = render(
       <Button title="Test Button" isLoading testID="button" />
     );
 
-    // Note: ActivityIndicator doesn't have a default testID,
-    // but the button should still render
+    // Button should render but text should not be visible when loading
     expect(getByTestId('button')).toBeTruthy();
+    expect(queryByText('Test Button')).toBeNull();
   });
 
   it('applies custom style', () => {
