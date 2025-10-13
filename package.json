@@ -46,14 +46,14 @@
   ],
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/Prediction3Ddotcom/TradeWize.Public/component.git"
+    "url": "git+https://github.com/Prediction3Ddotcom/TradeWize.Public.Component.git"
   },
-  "author": "tradewize <feroz.ahmed@prediction3d.com> (https://github.com/Prediction3Ddotcom/TradeWize.Public)",
+  "author": "tradewize <feroz.ahmed@prediction3d.com> (https://github.com/Prediction3Ddotcom/TradeWize.Public.Component.git)",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/Prediction3Ddotcom/TradeWize.Public/component/issues"
+    "url": "https://github.com/Prediction3Ddotcom/TradeWize.Public.Component.git/issues"
   },
-  "homepage": "https://github.com/Prediction3Ddotcom/TradeWize.Public/component#readme",
+  "homepage": "https://github.com/Prediction3Ddotcom/TradeWize.Public.Component.git#readme",
   "publishConfig": {
     "registry": "https://registry.npmjs.org/"
   },
