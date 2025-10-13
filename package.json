@@ -9,8 +9,7 @@
       "source": "./src/index.tsx",
       "types": "./lib/typescript/src/index.d.ts",
       "default": "./lib/module/index.js"
-    },
-    "./package.json": "./package.json"
+    }
   },
   "files": [
     "src",
