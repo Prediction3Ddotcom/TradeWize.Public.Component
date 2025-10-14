@@ -16,6 +16,7 @@ export function Icon({ name, style }: IconProps) {
     'minus': '➖',
     'check': '✓',
     'cross': '✗',
+    'x': '✕',
     'arrow-right': '→',
     'arrow-left': '←',
     'arrow-up': '↑',

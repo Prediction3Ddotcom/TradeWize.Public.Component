@@ -1,6 +1,7 @@
 import { StyleSheet, ScrollView, SafeAreaView } from 'react-native';
 import { ButtonExample } from './ButtonExample';
 import { TextExample } from './TextExample';
+import { InputExample } from './InputExample';
 
 export default function App() {
   return (
@@ -8,6 +9,7 @@ export default function App() {
       <ScrollView style={styles.container}>
         <TextExample />
         <ButtonExample />
+        <InputExample />
       </ScrollView>
     </SafeAreaView>
   );
