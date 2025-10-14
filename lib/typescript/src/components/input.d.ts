@@ -15,8 +15,11 @@ export interface InputProps extends TextInputProps {
     containerStyle?: ViewStyle;
     inputStyle?: TextStyle;
     labelStyle?: TextStyle;
+    borderColorActive?: string;
+    borderColorError?: string;
+    borderColor?: string;
     onRightIconPress?: () => void;
     onLeftIconPress?: () => void;
 }
-export declare function Input({ label, helperText, errorText, leftIcon, rightIcon, variant, size, isDisabled, isError, isRequired, fullWidth, containerStyle, inputStyle, labelStyle, onRightIconPress, onLeftIconPress, onFocus, onBlur, ...props }: InputProps): import("react/jsx-runtime").JSX.Element;
+export declare function Input({ label, helperText, errorText, leftIcon, rightIcon, variant, size, isDisabled, isError, isRequired, fullWidth, containerStyle, inputStyle, labelStyle, borderColorActive, borderColorError, borderColor, onRightIconPress, onLeftIconPress, onFocus, onBlur, ...props }: InputProps): import("react/jsx-runtime").JSX.Element;
 //# sourceMappingURL=input.d.ts.map

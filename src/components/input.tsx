@@ -7,7 +7,6 @@ import {
   type TextStyle,
   type TextInputProps,
   Pressable,
-  useColorScheme,
 } from 'react-native';
 import type { ReactNode } from 'react';
 import { CustomText } from './text';
@@ -27,6 +26,9 @@ export interface InputProps extends TextInputProps {
   containerStyle?: ViewStyle;
   inputStyle?: TextStyle;
   labelStyle?: TextStyle;
+  borderColorActive?: string;
+  borderColorError?: string;
+  borderColor?: string;
   onRightIconPress?: () => void;
   onLeftIconPress?: () => void;
 }
@@ -46,6 +48,9 @@ export function Input({
   containerStyle,
   inputStyle,
   labelStyle,
+  borderColorActive = '#007AFF',
+  borderColorError = '#FF3B30',
+  borderColor = '#C7C7CC',
   onRightIconPress,
   onLeftIconPress,
   onFocus,
@@ -53,8 +58,6 @@ export function Input({
   ...props
 }: InputProps) {
   const [isFocused, setIsFocused] = useState(false);
-  const colorScheme = useColorScheme();
-  const isDark = colorScheme === 'dark';
 
   const hasError = isError || !!errorText;
 
@@ -75,7 +78,6 @@ export function Input({
 
     return {
       ...baseStyles,
-      ...containerStyle,
     };
   };
 
@@ -90,40 +92,30 @@ export function Input({
       outline: {
         borderWidth: 1,
         borderColor: hasError
-          ? '#FF3B30'
+          ? borderColorError
           : isFocused
-            ? isDark
-              ? '#0A84FF'
-              : '#007AFF'
-            : isDark
-              ? '#3A3A3C'
-              : '#C7C7CC',
-        backgroundColor: isDark ? '#1C1C1E' : '#FFFFFF',
+            ? borderColorActive
+            : borderColor,
+        backgroundColor: '#FFFFFF',
       },
       filled: {
         borderWidth: 0,
-        backgroundColor: isDark ? '#2C2C2E' : '#F2F2F7',
+        backgroundColor: '#F2F2F7',
         borderBottomWidth: 2,
         borderBottomColor: hasError
-          ? '#FF3B30'
+          ? borderColorError
           : isFocused
-            ? isDark
-              ? '#0A84FF'
-              : '#007AFF'
+            ? borderColorActive
             : 'transparent',
       },
       underline: {
         borderWidth: 0,
         borderBottomWidth: 1,
         borderBottomColor: hasError
-          ? '#FF3B30'
+          ? borderColorError
           : isFocused
-            ? isDark
-              ? '#0A84FF'
-              : '#007AFF'
-            : isDark
-              ? '#3A3A3C'
-              : '#C7C7CC',
+            ? borderColorActive
+            : borderColor,
         backgroundColor: 'transparent',
         borderRadius: 0,
       },
@@ -162,7 +154,7 @@ export function Input({
   const getInputStyles = (): TextStyle => {
     const baseStyles: TextStyle = {
       flex: 1,
-      color: isDark ? '#FFFFFF' : '#000000',
+      color: '#000000',
       fontWeight: '400',
     };
 
@@ -184,7 +176,6 @@ export function Input({
     return {
       ...baseStyles,
       ...sizeStyles[size],
-      ...inputStyle,
     };
   };
 
@@ -199,14 +190,14 @@ export function Input({
 
   const getIconColor = (): string => {
     if (hasError) return '#FF3B30';
-    if (isFocused) return isDark ? '#0A84FF' : '#007AFF';
-    return isDark ? '#8E8E93' : '#6D6D70';
+    if (isFocused) return '#007AFF';
+    return '#6D6D70';
   };
 
-  const placeholderColor = isDark ? '#8E8E93' : '#C7C7CC';
+  const placeholderColor = '#C7C7CC';
 
   return (
-    <View style={getContainerStyles()}>
+    <View style={[getContainerStyles(), containerStyle]}>
       {label && (
         <View style={styles.labelContainer}>
           <CustomText
@@ -243,7 +234,7 @@ export function Input({
         )}
 
         <TextInput
-          style={getInputStyles()}
+          style={[getInputStyles(), inputStyle]}
           placeholderTextColor={placeholderColor}
           editable={!isDisabled}
           onFocus={handleFocus}
