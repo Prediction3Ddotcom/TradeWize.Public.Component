@@ -7,6 +7,7 @@ import {
   ActivityIndicator,
   type TouchableOpacityProps,
   View,
+  type StyleProp,
 } from 'react-native';
 import { useColorScheme } from 'react-native';
 import type { ReactNode } from 'react';
@@ -29,8 +30,8 @@ export interface ButtonProps extends Omit<TouchableOpacityProps, 'style'> {
   isLoading?: boolean;
   isDisabled?: boolean;
   fullWidth?: boolean;
-  style?: ViewStyle;
-  textStyle?: TextStyle;
+  style?: StyleProp<ViewStyle>;
+  textStyle?: StyleProp<TextStyle>;
   iconSpacing?: number;
 }
 
@@ -140,7 +141,6 @@ export function Button({
       ...variantStyles[variant],
       ...sizeStyles[size],
       ...(isDisabled && disabledStyles),
-      ...style,
     };
   };
 
@@ -192,7 +192,6 @@ export function Button({
       ...baseStyles,
       ...variantTextStyles[variant],
       ...sizeTextStyles[size],
-      ...textStyle,
     };
   };
 
@@ -266,7 +265,9 @@ export function Button({
           </View>
         )}
 
-        {title && <CustomText style={getTextStyles()}>{title}</CustomText>}
+        {title && (
+          <CustomText style={[getTextStyles(), textStyle]}>{title}</CustomText>
+        )}
 
         {rightIcon && (
           <View style={[styles.icon, { marginLeft: iconSpacing }]}>
@@ -285,7 +286,7 @@ export function Button({
 
   return (
     <TouchableOpacity
-      style={getButtonStyles()}
+      style={[getButtonStyles(), style]}
       onPress={handlePress}
       disabled={isDisabled || isLoading}
       activeOpacity={0.7}
