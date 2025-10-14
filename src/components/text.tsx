@@ -51,7 +51,7 @@ export function CustomText({
   const colorScheme = useColorScheme();
   const isDark = colorScheme === 'dark';
 
-  const getTextStyles = (): StyleProp<TextStyle> => {
+  const getTextStyles = (): TextStyle => {
     const baseStyles: TextStyle = {
       // Đặt lineHeight cố định để tránh layout shift
       includeFontPadding: false,
@@ -183,13 +183,12 @@ export function CustomText({
       ...colorStyles[color],
       ...weightStyles[weight],
       ...alignStyles[align],
-      ...style,
     };
   };
 
   return (
     <Text
-      style={getTextStyles()}
+      style={[getTextStyles(), style]}
       numberOfLines={numberOfLines}
       allowFontScaling={allowFontScaling}
       {...props}
