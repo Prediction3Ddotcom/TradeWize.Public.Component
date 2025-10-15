@@ -87,7 +87,8 @@
   },
   "peerDependencies": {
     "react": "*",
-    "react-native": "*"
+    "react-native": "*",
+    "react-native-safe-area-context": "*"
   },
   "packageManager": "yarn@3.6.1",
   "jest": {
@@ -158,5 +159,8 @@
     "languages": "kotlin-objc",
     "type": "turbo-module",
     "version": "0.54.3"
+  },
+  "dependencies": {
+    "react-native-safe-area-context": "^5.6.1"
   }
 }
