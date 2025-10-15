@@ -15,3 +15,11 @@ export { default as BaseContainer } from './components/baseContainer';
 export type { BaseContainerProps } from './components/baseContainer';
 export { default as HeaderBase } from './components/header';
 export type { HeaderBaseProps } from './components/header';
+
+export {
+  scaleSize,
+  BASE_WIDTH,
+  BASE_HEIGHT,
+  SCREEN_WIDTH,
+  SCREEN_HEIGHT,
+} from './utils';
