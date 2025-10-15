@@ -1,6 +1,6 @@
 import React, { type ReactNode } from 'react';
 import { type ViewStyle, type StyleProp } from 'react-native';
-interface BaseContainerProps {
+export interface BaseContainerProps {
     children: ReactNode;
     backgroundColor?: string;
     style?: StyleProp<ViewStyle>;

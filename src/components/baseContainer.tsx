@@ -8,7 +8,7 @@ import {
 } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
-interface BaseContainerProps {
+export interface BaseContainerProps {
   children: ReactNode;
   backgroundColor?: string;
   style?: StyleProp<ViewStyle>;

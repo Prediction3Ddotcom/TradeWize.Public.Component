@@ -5,4 +5,8 @@ export { CustomText as Text } from './components/text';
 export type { TextProps } from './components/text';
 export { Input } from './components/input';
 export type { InputProps } from './components/input';
+export { default as BaseContainer } from './components/baseContainer';
+export type { BaseContainerProps } from './components/baseContainer';
+export { default as HeaderBase } from './components/header';
+export type { HeaderBaseProps } from './components/header';
 //# sourceMappingURL=index.d.ts.map
