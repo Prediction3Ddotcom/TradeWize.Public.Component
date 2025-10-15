@@ -26,6 +26,7 @@ export interface InputProps extends TextInputProps {
   containerStyle?: ViewStyle;
   inputStyle?: TextStyle;
   labelStyle?: TextStyle;
+  inputContainerStyle?: ViewStyle;
   borderColorActive?: string;
   borderColorError?: string;
   borderColor?: string;
@@ -48,6 +49,7 @@ export function Input({
   containerStyle,
   inputStyle,
   labelStyle,
+  inputContainerStyle,
   borderColorActive = '#007AFF',
   borderColorError = '#FF3B30',
   borderColor = '#C7C7CC',
@@ -216,7 +218,7 @@ export function Input({
         </View>
       )}
 
-      <View style={getInputContainerStyles()}>
+      <View style={[getInputContainerStyles(), inputContainerStyle]}>
         {leftIcon && (
           <Pressable
             onPress={onLeftIconPress}
