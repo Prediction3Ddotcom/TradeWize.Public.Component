@@ -108,6 +108,28 @@ export interface SelectBoxProps {
   showClearButton?: boolean;
   showCheckmark?: boolean;
 
+  // Additional Modal Props
+  onModalShow?: () => void;
+  onModalHide?: () => void;
+  onModalWillShow?: () => void;
+  onModalWillHide?: () => void;
+  swipeDirection?:
+    | 'up'
+    | 'down'
+    | 'left'
+    | 'right'
+    | Array<'up' | 'down' | 'left' | 'right'>;
+  onSwipeComplete?: () => void;
+  swipeThreshold?: number;
+  backdropColor?: string;
+  backdropTransitionInTiming?: number;
+  backdropTransitionOutTiming?: number;
+  hideModalContentWhileAnimating?: boolean;
+  avoidKeyboard?: boolean;
+  coverScreen?: boolean;
+  hasBackdrop?: boolean;
+  customBackdrop?: ReactNode;
+
   // Text Props
   modalTitle?: string;
   confirmButtonText?: string;
@@ -257,6 +279,23 @@ export function SelectBox({
   backdropOpacity = 0.5,
   showClearButton = true,
   showCheckmark = true,
+
+  // Additional Modal Props
+  onModalShow,
+  onModalHide,
+  onModalWillShow,
+  onModalWillHide,
+  swipeDirection,
+  onSwipeComplete,
+  swipeThreshold,
+  backdropColor,
+  backdropTransitionInTiming,
+  backdropTransitionOutTiming,
+  hideModalContentWhileAnimating = false,
+  avoidKeyboard = true,
+  coverScreen = true,
+  hasBackdrop = true,
+  customBackdrop,
 
   // Text Props
   modalTitle,
@@ -691,6 +730,21 @@ export function SelectBox({
         useNativeDriver
         statusBarTranslucent
         testID={modalTestID}
+        onModalShow={onModalShow}
+        onModalHide={onModalHide}
+        onModalWillShow={onModalWillShow}
+        onModalWillHide={onModalWillHide}
+        swipeDirection={swipeDirection}
+        onSwipeComplete={onSwipeComplete}
+        swipeThreshold={swipeThreshold}
+        backdropColor={backdropColor}
+        backdropTransitionInTiming={backdropTransitionInTiming}
+        backdropTransitionOutTiming={backdropTransitionOutTiming}
+        hideModalContentWhileAnimating={hideModalContentWhileAnimating}
+        avoidKeyboard={avoidKeyboard}
+        coverScreen={coverScreen}
+        hasBackdrop={hasBackdrop}
+        customBackdrop={customBackdrop}
       >
         <Pressable
           style={[
