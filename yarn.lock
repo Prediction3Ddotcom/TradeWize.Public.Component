@@ -10082,6 +10082,16 @@ __metadata:
   languageName: node
   linkType: hard
 
+"react-native-fast-shadow@npm:^0.1.1":
+  version: 0.1.1
+  resolution: "react-native-fast-shadow@npm:0.1.1"
+  peerDependencies:
+    react: "*"
+    react-native: "*"
+  checksum: b247d2e74fc8384a85f5de34b00f1054e5895380d3abd23a38efe6865a2a4a3b809045257b691b52f7aa72449f51aad89ff7ada85b55e19b040fab836514250d
+  languageName: node
+  linkType: hard
+
 "react-native-modal@npm:^14.0.0-rc.1":
   version: 14.0.0-rc.1
   resolution: "react-native-modal@npm:14.0.0-rc.1"
@@ -11369,6 +11379,7 @@ __metadata:
     react: 19.1.0
     react-native: 0.81.1
     react-native-builder-bob: ^0.40.13
+    react-native-fast-shadow: ^0.1.1
     react-native-modal: ^14.0.0-rc.1
     react-native-safe-area-context: ^5.6.1
     react-test-renderer: 19.1.0
@@ -11378,6 +11389,7 @@ __metadata:
   peerDependencies:
     react: "*"
     react-native: "*"
+    react-native-fast-shadow: "*"
     react-native-modal: "*"
     react-native-safe-area-context: "*"
   languageName: unknown

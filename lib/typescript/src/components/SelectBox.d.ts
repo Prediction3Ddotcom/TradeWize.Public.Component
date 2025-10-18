@@ -1,4 +1,4 @@
-import { type ViewStyle, type TextStyle } from 'react-native';
+import { type ViewStyle, type TextStyle, type ImageStyle } from 'react-native';
 import type { ReactNode } from 'react';
 export interface SelectOption {
     label: string;
@@ -25,6 +25,7 @@ export interface SelectBoxProps {
     isError?: boolean;
     isRequired?: boolean;
     fullWidth?: boolean;
+    shadowColor?: string;
     containerStyle?: ViewStyle;
     inputStyle?: TextStyle;
     labelStyle?: TextStyle;
@@ -37,6 +38,7 @@ export interface SelectBoxProps {
     modalHeaderStyle?: ViewStyle;
     modalFooterStyle?: ViewStyle;
     modalTitleStyle?: TextStyle;
+    shadowContentStyle?: ViewStyle;
     searchContainerStyle?: ViewStyle;
     searchInputStyle?: TextStyle;
     optionStyle?: ViewStyle;
@@ -48,7 +50,7 @@ export interface SelectBoxProps {
     checkmarkStyle?: TextStyle;
     leftIconContainerStyle?: ViewStyle;
     rightIconContainerStyle?: ViewStyle;
-    chevronIconStyle?: TextStyle;
+    chevronIconStyle?: ImageStyle;
     clearButtonStyle?: ViewStyle;
     clearButtonTextStyle?: TextStyle;
     closeButtonStyle?: ViewStyle;
@@ -126,5 +128,5 @@ export interface SelectBoxProps {
     modalTestID?: string;
     optionTestID?: string;
 }
-export declare function SelectBox({ label, placeholder, helperText, errorText, options, value, onChange, multiple, searchable, leftIcon, rightIcon, variant, size, isDisabled, isError, isRequired, fullWidth, containerStyle, inputStyle, labelStyle, inputContainerStyle, helperTextStyle, errorTextStyle, modalStyle, modalOverlayStyle, modalContentStyle, modalHeaderStyle, modalFooterStyle, modalTitleStyle, searchContainerStyle, searchInputStyle, optionStyle, optionLabelStyle, optionDescriptionStyle, selectedOptionStyle, disabledOptionStyle, checkboxStyle: customCheckboxStyle, checkmarkStyle: customCheckmarkStyle, leftIconContainerStyle, rightIconContainerStyle, chevronIconStyle: customChevronIconStyle, clearButtonStyle, clearButtonTextStyle: customClearButtonTextStyle, closeButtonStyle, closeButtonTextStyle, borderColorActive, borderColorError, borderColor, backgroundColor, textColor, placeholderColor, modalBackgroundColor, selectedBackgroundColor, checkboxSelectedColor, checkboxUnselectedColor, maxHeight, emptyMessage, searchPlaceholder, closeOnSelect, modalPosition, animationInTiming, animationOutTiming, backdropOpacity, showClearButton, showCheckmark, onModalShow, onModalHide, onModalWillShow, onModalWillHide, swipeDirection, onSwipeComplete, swipeThreshold, backdropColor, backdropTransitionInTiming, backdropTransitionOutTiming, hideModalContentWhileAnimating, avoidKeyboard, coverScreen, hasBackdrop, customBackdrop, modalTitle, confirmButtonText, cancelButtonText, confirmButtonStyle, confirmButtonTextStyle, cancelButtonStyle, cancelButtonTextStyle, renderOption, renderLabel, renderDisplayText, renderModalHeader, renderModalFooter, renderEmptyState, renderSearchInput, renderLeftIcon, renderRightIcon, renderChevron, renderClearButton, onOpen, onClose, onSearch, onClear, onSelectOption, onDeselectOption, onFocus, onBlur, filterOptions, sortOptions, getOptionLabel, getOptionValue, isOptionDisabled: customIsOptionDisabled, isOptionSelected: customIsOptionSelected, accessibilityLabel, accessibilityHint, testID, modalTestID, optionTestID, }: SelectBoxProps): import("react/jsx-runtime").JSX.Element;
+export declare function SelectBox({ label, placeholder, helperText, errorText, options, value, onChange, multiple, searchable, leftIcon, rightIcon, variant, size, isDisabled, isError, isRequired, fullWidth, shadowColor, containerStyle, inputStyle, labelStyle, inputContainerStyle, helperTextStyle, errorTextStyle, shadowContentStyle, modalStyle, modalOverlayStyle, modalContentStyle, modalHeaderStyle, modalFooterStyle, modalTitleStyle, searchContainerStyle, searchInputStyle, optionStyle, optionLabelStyle, optionDescriptionStyle, selectedOptionStyle, disabledOptionStyle, checkboxStyle: customCheckboxStyle, checkmarkStyle: customCheckmarkStyle, leftIconContainerStyle, rightIconContainerStyle, chevronIconStyle: customChevronIconStyle, clearButtonStyle, clearButtonTextStyle: customClearButtonTextStyle, closeButtonStyle, closeButtonTextStyle, borderColorActive, borderColorError, borderColor, backgroundColor, textColor, placeholderColor, modalBackgroundColor, selectedBackgroundColor, checkboxSelectedColor, checkboxUnselectedColor, maxHeight, emptyMessage, searchPlaceholder, closeOnSelect, modalPosition, animationInTiming, animationOutTiming, backdropOpacity, showClearButton, showCheckmark, onModalShow, onModalHide, onModalWillShow, onModalWillHide, swipeDirection, onSwipeComplete, swipeThreshold, backdropColor, backdropTransitionInTiming, backdropTransitionOutTiming, hideModalContentWhileAnimating, avoidKeyboard, coverScreen, hasBackdrop, customBackdrop, modalTitle, confirmButtonText, cancelButtonText, confirmButtonStyle, confirmButtonTextStyle, cancelButtonStyle, cancelButtonTextStyle, renderOption, renderLabel, renderDisplayText, renderModalHeader, renderModalFooter, renderEmptyState, renderSearchInput, renderLeftIcon, renderRightIcon, renderChevron, renderClearButton, onOpen, onClose, onSearch, onClear, onSelectOption, onDeselectOption, onFocus, onBlur, filterOptions, sortOptions, getOptionLabel, getOptionValue, isOptionDisabled: customIsOptionDisabled, isOptionSelected: customIsOptionSelected, accessibilityLabel, accessibilityHint, testID, modalTestID, optionTestID, }: SelectBoxProps): import("react/jsx-runtime").JSX.Element;
 //# sourceMappingURL=SelectBox.d.ts.map

@@ -6,10 +6,11 @@ import {
   FlatList,
   type ViewStyle,
   type TextStyle,
-  TouchableOpacity,
   TextInput,
   StatusBar,
   Dimensions,
+  Image,
+  type ImageStyle,
 } from 'react-native';
 import { useColorScheme } from 'react-native';
 import type { ReactNode } from 'react';
@@ -17,6 +18,7 @@ import { CustomText } from './text';
 import Modal from 'react-native-modal';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { Button } from './button';
+import { ShadowedView } from 'react-native-fast-shadow';
 
 export interface SelectOption {
   label: string;
@@ -45,6 +47,7 @@ export interface SelectBoxProps {
   isError?: boolean;
   isRequired?: boolean;
   fullWidth?: boolean;
+  shadowColor?: string;
 
   // Style Props - Main Container
   containerStyle?: ViewStyle;
@@ -61,6 +64,7 @@ export interface SelectBoxProps {
   modalHeaderStyle?: ViewStyle;
   modalFooterStyle?: ViewStyle;
   modalTitleStyle?: TextStyle;
+  shadowContentStyle?: ViewStyle;
 
   // Style Props - Search
   searchContainerStyle?: ViewStyle;
@@ -78,7 +82,7 @@ export interface SelectBoxProps {
   // Style Props - Icons & Buttons
   leftIconContainerStyle?: ViewStyle;
   rightIconContainerStyle?: ViewStyle;
-  chevronIconStyle?: TextStyle;
+  chevronIconStyle?: ImageStyle;
   clearButtonStyle?: ViewStyle;
   clearButtonTextStyle?: TextStyle;
   closeButtonStyle?: ViewStyle;
@@ -217,6 +221,7 @@ export function SelectBox({
   isError = false,
   isRequired = false,
   fullWidth = true,
+  shadowColor = '#000000',
 
   // Style Props - Main Container
   containerStyle,
@@ -225,6 +230,7 @@ export function SelectBox({
   inputContainerStyle,
   helperTextStyle,
   errorTextStyle,
+  shadowContentStyle,
 
   // Style Props - Modal
   modalStyle,
@@ -274,8 +280,8 @@ export function SelectBox({
   searchPlaceholder = 'Tìm kiếm...',
   closeOnSelect = true,
   modalPosition = 'center',
-  animationInTiming = 300,
-  animationOutTiming = 300,
+  animationInTiming = 400,
+  animationOutTiming = 400,
   backdropOpacity = 0.5,
   showClearButton = true,
   showCheckmark = true,
@@ -288,7 +294,7 @@ export function SelectBox({
   swipeDirection,
   onSwipeComplete,
   swipeThreshold,
-  backdropColor,
+  backdropColor = 'transparent',
   backdropTransitionInTiming,
   backdropTransitionOutTiming,
   hideModalContentWhileAnimating = false,
@@ -441,9 +447,9 @@ export function SelectBox({
 
   const getIconSize = useCallback((): number => {
     const sizes = {
-      small: 16,
-      medium: 20,
-      large: 24,
+      small: 12,
+      medium: 16,
+      large: 20,
     };
     return sizes[size];
   }, [size]);
@@ -456,8 +462,9 @@ export function SelectBox({
 
   const chevronIconStyle = useMemo(
     () => ({
-      fontSize: getIconSize(),
-      color: getIconColor(),
+      width: getIconSize(),
+      height: getIconSize(),
+      tintColor: getIconColor(),
     }),
     [getIconSize, getIconColor]
   );
@@ -707,9 +714,15 @@ export function SelectBox({
 
     return (
       <View style={styles.chevronIcon}>
-        <CustomText style={[chevronIconStyle, customChevronIconStyle]}>
-          ▼
-        </CustomText>
+        <Image
+          source={require('../assets/up_arrows.png')}
+          tintColor={getIconColor()}
+          style={[
+            { transform: [{ rotate: isModalVisible ? '0deg' : '180deg' }] },
+            chevronIconStyle,
+            customChevronIconStyle,
+          ]}
+        />
       </View>
     );
   };
@@ -746,107 +759,143 @@ export function SelectBox({
         hasBackdrop={hasBackdrop}
         customBackdrop={customBackdrop}
       >
-        <Pressable
+        <ShadowedView
           style={[
-            styles.modalOverlay,
-            isBottomModal && styles.modalOverlayBottom,
-            modalOverlayStyle,
+            styles.shadowContainer,
+            { shadowColor: shadowColor },
+            shadowContentStyle,
           ]}
-          onPress={handleCloseModal}
         >
-          <StatusBar
-            backgroundColor={`rgba(0, 0, 0, ${backdropOpacity})`}
-            barStyle={isDark ? 'light-content' : 'light-content'}
-          />
-          <View
+          <Pressable
             style={[
-              styles.modalSafeArea,
-              isBottomModal && styles.modalSafeAreaBottom,
-              { paddingBottom: insets.bottom },
+              styles.modalOverlay,
+              isBottomModal && styles.modalOverlayBottom,
+              modalOverlayStyle,
             ]}
+            onPress={handleCloseModal}
           >
-            <Pressable
+            <StatusBar
+              backgroundColor={`rgba(0, 0, 0, ${backdropOpacity})`}
+              barStyle={isDark ? 'light-content' : 'light-content'}
+            />
+            <View
               style={[
-                styles.modalContent,
-                isBottomModal && styles.modalContentBottom,
-                getModalContentStyle(),
-                modalContentStyle,
+                styles.modalSafeArea,
+                isBottomModal && styles.modalSafeAreaBottom,
+                { paddingBottom: insets.bottom },
               ]}
-              onPress={(e) => e.stopPropagation()}
             >
-              {/* Modal Header */}
-              {renderModalHeader ? (
-                renderModalHeader(
-                  modalTitle ?? label ?? 'Chọn',
-                  handleCloseModal
-                )
-              ) : (
-                <View style={[styles.modalHeader, modalHeaderStyle]}>
-                  <CustomText
-                    variant="h6"
-                    color="primary"
-                    style={modalTitleStyle}
-                  >
-                    {modalTitle ?? label ?? 'Chọn'}
-                  </CustomText>
-                  <TouchableOpacity
-                    onPress={handleCloseModal}
-                    style={[styles.closeButton, closeButtonStyle]}
-                  >
-                    <CustomText
-                      style={[styles.closeButtonText, closeButtonTextStyle]}
-                    >
-                      ×
-                    </CustomText>
-                  </TouchableOpacity>
-                </View>
-              )}
-
-              {/* Search Input */}
-              {searchable &&
-                (renderSearchInput ? (
-                  renderSearchInput(searchQuery, handleSearchChange)
+              <Pressable
+                style={[
+                  styles.modalContent,
+                  isBottomModal && styles.modalContentBottom,
+                  getModalContentStyle(),
+                  modalContentStyle,
+                ]}
+                onPress={(e) => e.stopPropagation()}
+              >
+                {/* Modal Header */}
+                {renderModalHeader ? (
+                  renderModalHeader(
+                    modalTitle ?? label ?? 'Chọn',
+                    handleCloseModal
+                  )
                 ) : (
-                  <View style={[styles.searchContainer, searchContainerStyle]}>
-                    <TextInput
-                      style={[
-                        styles.searchInput,
-                        getSearchInputBackgroundStyle(),
-                        getSearchInputTextStyle(),
-                        searchInputStyle,
-                      ]}
-                      placeholder={searchPlaceholder}
-                      placeholderTextColor={
-                        dynamicStyles.searchInputPlaceholder
-                      }
-                      value={searchQuery}
-                      onChangeText={handleSearchChange}
-                      autoCorrect={false}
-                      autoCapitalize="none"
-                    />
+                  <View style={[styles.modalHeader, modalHeaderStyle]}>
+                    <CustomText
+                      variant="h6"
+                      color="primary"
+                      style={modalTitleStyle}
+                    >
+                      {modalTitle ?? label ?? 'Chọn'}
+                    </CustomText>
+                    <Button
+                      variant="ghost"
+                      onPress={handleCloseModal}
+                      style={[styles.closeButton, closeButtonStyle]}
+                    >
+                      <CustomText
+                        style={[styles.closeButtonText, closeButtonTextStyle]}
+                      >
+                        ×
+                      </CustomText>
+                    </Button>
                   </View>
-                ))}
+                )}
 
-              {/* Options List */}
-              <FlatList
-                data={filteredOptions}
-                keyExtractor={(item, index) => `${item?.value ?? index}`}
-                renderItem={({ item, index }) => {
-                  if (!item) return null;
+                {/* Search Input */}
+                {searchable &&
+                  (renderSearchInput ? (
+                    renderSearchInput(searchQuery, handleSearchChange)
+                  ) : (
+                    <View
+                      style={[styles.searchContainer, searchContainerStyle]}
+                    >
+                      <TextInput
+                        style={[
+                          styles.searchInput,
+                          getSearchInputBackgroundStyle(),
+                          getSearchInputTextStyle(),
+                          searchInputStyle,
+                        ]}
+                        placeholder={searchPlaceholder}
+                        placeholderTextColor={
+                          dynamicStyles.searchInputPlaceholder
+                        }
+                        value={searchQuery}
+                        onChangeText={handleSearchChange}
+                        autoCorrect={false}
+                        autoCapitalize="none"
+                      />
+                    </View>
+                  ))}
 
-                  const optionValue = getOptionValue
-                    ? getOptionValue(item)
-                    : item.value;
-                  const isSelected = customIsOptionSelected
-                    ? customIsOptionSelected(item, value)
-                    : selectedValues.includes(optionValue);
-                  const isOptionDisabled = customIsOptionDisabled
-                    ? customIsOptionDisabled(item)
-                    : (item.disabled ?? false);
+                {/* Options List */}
+                <FlatList
+                  data={filteredOptions}
+                  keyExtractor={(item, index) => `${item?.value ?? index}`}
+                  renderItem={({ item, index }) => {
+                    if (!item) return null;
 
-                  if (renderOption) {
+                    const optionValue = getOptionValue
+                      ? getOptionValue(item)
+                      : item.value;
+                    const isSelected = customIsOptionSelected
+                      ? customIsOptionSelected(item, value)
+                      : selectedValues.includes(optionValue);
+                    const isOptionDisabled = customIsOptionDisabled
+                      ? customIsOptionDisabled(item)
+                      : (item.disabled ?? false);
+
+                    if (renderOption) {
+                      return (
+                        <Button
+                          variant="ghost"
+                          onPress={() =>
+                            !isOptionDisabled &&
+                            handleSelectOption(optionValue, item)
+                          }
+                          disabled={isOptionDisabled}
+                          testID={optionTestID}
+                        >
+                          {renderOption(item, isSelected)}
+                        </Button>
+                      );
+                    }
+
                     return (
-                      <TouchableOpacity
+                      <Button
+                        variant="ghost"
+                        style={[
+                          styles.optionItem,
+                          filteredOptions?.length !== index + 1 &&
+                            styles.borderBottom,
+                          getOptionItemStyle(isSelected),
+                          isSelected && selectedOptionStyle,
+                          isOptionDisabled && styles.optionDisabled,
+                          isOptionDisabled && disabledOptionStyle,
+                          optionStyle,
+                        ]}
                         onPress={() =>
                           !isOptionDisabled &&
                           handleSelectOption(optionValue, item)
@@ -854,151 +903,129 @@ export function SelectBox({
                         disabled={isOptionDisabled}
                         testID={optionTestID}
                       >
-                        {renderOption(item, isSelected)}
-                      </TouchableOpacity>
-                    );
-                  }
-
-                  return (
-                    <Button
-                      variant="ghost"
-                      style={[
-                        styles.optionItem,
-                        filteredOptions?.length !== index + 1 &&
-                          styles.borderBottom,
-                        getOptionItemStyle(isSelected),
-                        isSelected && selectedOptionStyle,
-                        isOptionDisabled && styles.optionDisabled,
-                        isOptionDisabled && disabledOptionStyle,
-                        optionStyle,
-                      ]}
-                      onPress={() =>
-                        !isOptionDisabled &&
-                        handleSelectOption(optionValue, item)
-                      }
-                      disabled={isOptionDisabled}
-                      testID={optionTestID}
-                    >
-                      {item.icon && (
-                        <View style={styles.optionIcon}>{item.icon}</View>
-                      )}
-                      <View style={styles.optionTextContainer}>
-                        <CustomText
-                          variant="body"
-                          color={isOptionDisabled ? 'tertiary' : 'primary'}
-                          style={[styles.optionLabel, optionLabelStyle]}
-                        >
-                          {getOptionLabel
-                            ? getOptionLabel(item)
-                            : (item.label ?? '')}
-                        </CustomText>
-                        {item.description && (
-                          <CustomText
-                            variant="caption"
-                            color="secondary"
-                            style={[
-                              styles.optionDescription,
-                              optionDescriptionStyle,
-                            ]}
-                          >
-                            {item.description}
-                          </CustomText>
+                        {item.icon && (
+                          <View style={styles.optionIcon}>{item.icon}</View>
                         )}
-                      </View>
-                      {multiple && showCheckmark && (
-                        <View
-                          style={[
-                            styles.checkbox,
-                            getCheckboxStyle(isSelected),
-                            customCheckboxStyle,
-                          ]}
-                        >
-                          {isSelected && (
+                        <View style={styles.optionTextContainer}>
+                          <CustomText
+                            variant="body"
+                            color={isOptionDisabled ? 'tertiary' : 'primary'}
+                            style={[styles.optionLabel, optionLabelStyle]}
+                          >
+                            {getOptionLabel
+                              ? getOptionLabel(item)
+                              : (item.label ?? '')}
+                          </CustomText>
+                          {item.description && (
                             <CustomText
-                              style={[styles.checkmark, customCheckmarkStyle]}
+                              variant="caption"
+                              color="secondary"
+                              style={[
+                                styles.optionDescription,
+                                optionDescriptionStyle,
+                              ]}
                             >
-                              ✓
+                              {item.description}
                             </CustomText>
                           )}
                         </View>
+                        {multiple && showCheckmark && (
+                          <View
+                            style={[
+                              styles.checkbox,
+                              getCheckboxStyle(isSelected),
+                              customCheckboxStyle,
+                            ]}
+                          >
+                            {isSelected && (
+                              <CustomText
+                                style={[styles.checkmark, customCheckmarkStyle]}
+                              >
+                                ✓
+                              </CustomText>
+                            )}
+                          </View>
+                        )}
+                        {!multiple && isSelected && showCheckmark && (
+                          <CustomText
+                            style={[
+                              styles.selectedCheckmark,
+                              getSelectedCheckmarkStyle(),
+                            ]}
+                          >
+                            ✓
+                          </CustomText>
+                        )}
+                      </Button>
+                    );
+                  }}
+                  ListEmptyComponent={
+                    <>
+                      {renderEmptyState ? (
+                        renderEmptyState(emptyMessage)
+                      ) : (
+                        <View style={styles.emptyContainer}>
+                          <CustomText
+                            variant="body"
+                            color="secondary"
+                            align="center"
+                          >
+                            {emptyMessage}
+                          </CustomText>
+                        </View>
                       )}
-                      {!multiple && isSelected && showCheckmark && (
-                        <CustomText
-                          style={[
-                            styles.selectedCheckmark,
-                            getSelectedCheckmarkStyle(),
-                          ]}
-                        >
-                          ✓
-                        </CustomText>
-                      )}
-                    </Button>
-                  );
-                }}
-                ListEmptyComponent={
-                  <>
-                    {renderEmptyState ? (
-                      renderEmptyState(emptyMessage)
-                    ) : (
-                      <View style={styles.emptyContainer}>
-                        <CustomText
-                          variant="body"
-                          color="secondary"
-                          align="center"
-                        >
-                          {emptyMessage}
-                        </CustomText>
-                      </View>
-                    )}
-                  </>
-                }
-                style={styles.optionsList}
-                showsVerticalScrollIndicator={true}
-              />
+                    </>
+                  }
+                  style={styles.optionsList}
+                  showsVerticalScrollIndicator={true}
+                />
 
-              {/* Modal Footer */}
-              {multiple &&
-                (renderModalFooter ? (
-                  renderModalFooter(
-                    handleCloseModal,
-                    handleClearSelection,
-                    selectedValues.length
-                  )
-                ) : (
-                  <View style={[styles.modalFooter, modalFooterStyle]}>
-                    <TouchableOpacity
-                      style={[styles.footerButton, cancelButtonStyle]}
-                      onPress={handleClearSelection}
-                    >
-                      <CustomText
-                        variant="button"
-                        color="secondary"
-                        style={cancelButtonTextStyle}
+                {/* Modal Footer */}
+                {multiple &&
+                  (renderModalFooter ? (
+                    renderModalFooter(
+                      handleCloseModal,
+                      handleClearSelection,
+                      selectedValues.length
+                    )
+                  ) : (
+                    <View style={[styles.modalFooter, modalFooterStyle]}>
+                      <Button
+                        variant="ghost"
+                        style={[styles.footerButton, cancelButtonStyle]}
+                        onPress={handleClearSelection}
                       >
-                        {cancelButtonText}
-                      </CustomText>
-                    </TouchableOpacity>
-                    <TouchableOpacity
-                      style={[
-                        styles.footerButtonPrimary,
-                        getFooterButtonPrimaryStyle(),
-                        confirmButtonStyle,
-                      ]}
-                      onPress={handleCloseModal}
-                    >
-                      <CustomText
-                        variant="button"
-                        color="inverse"
-                        style={confirmButtonTextStyle}
+                        <CustomText
+                          variant="button"
+                          color="secondary"
+                          style={cancelButtonTextStyle}
+                        >
+                          {cancelButtonText}
+                        </CustomText>
+                      </Button>
+                      <Button
+                        variant="ghost"
+                        style={[
+                          styles.footerButtonPrimary,
+                          getFooterButtonPrimaryStyle(),
+                          confirmButtonStyle,
+                        ]}
+                        onPress={handleCloseModal}
                       >
-                        {confirmButtonText}
-                      </CustomText>
-                    </TouchableOpacity>
-                  </View>
-                ))}
-            </Pressable>
-          </View>
-        </Pressable>
+                        <CustomText
+                          variant="button"
+                          color="inverse"
+                          style={confirmButtonTextStyle}
+                        >
+                          {confirmButtonText}
+                        </CustomText>
+                      </Button>
+                    </View>
+                  ))}
+              </Pressable>
+            </View>
+          </Pressable>
+        </ShadowedView>
       </Modal>
     );
   };
@@ -1081,7 +1108,8 @@ export function SelectBox({
           (renderClearButton ? (
             renderClearButton(handleClearSelection)
           ) : (
-            <TouchableOpacity
+            <Button
+              variant="ghost"
               onPress={(e) => {
                 e.stopPropagation();
                 handleClearSelection();
@@ -1097,7 +1125,7 @@ export function SelectBox({
               >
                 ×
               </CustomText>
-            </TouchableOpacity>
+            </Button>
           ))}
 
         {rightIcon ? (
@@ -1183,7 +1211,6 @@ const styles = StyleSheet.create({
   },
   modalOverlay: {
     flex: 1,
-    backgroundColor: 'rgba(0, 0, 0, 0.5)',
     justifyContent: 'center',
     alignItems: 'center',
   },
@@ -1314,5 +1341,14 @@ const styles = StyleSheet.create({
     paddingHorizontal: 24,
     paddingVertical: 12,
     borderRadius: 8,
+  },
+  shadowContainer: {
+    flex: 1,
+    shadowOpacity: 0.4,
+    shadowRadius: 12,
+    shadowOffset: {
+      width: 5,
+      height: 3,
+    },
   },
 });
