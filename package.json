@@ -88,6 +88,7 @@
   "peerDependencies": {
     "react": "*",
     "react-native": "*",
+    "react-native-modal": "*",
     "react-native-safe-area-context": "*"
   },
   "packageManager": "yarn@3.6.1",
@@ -161,6 +162,7 @@
     "version": "0.54.3"
   },
   "dependencies": {
+    "react-native-modal": "^14.0.0-rc.1",
     "react-native-safe-area-context": "^5.6.1"
   }
 }
