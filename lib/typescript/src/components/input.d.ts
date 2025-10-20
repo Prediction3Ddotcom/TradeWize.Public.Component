@@ -1,4 +1,4 @@
-import { type ViewStyle, type TextStyle, type TextInputProps } from 'react-native';
+import { type ViewStyle, type TextStyle, type TextInputProps, type StyleProp } from 'react-native';
 import type { ReactNode } from 'react';
 export interface InputProps extends TextInputProps {
     label?: string;
@@ -12,10 +12,10 @@ export interface InputProps extends TextInputProps {
     isError?: boolean;
     isRequired?: boolean;
     fullWidth?: boolean;
-    containerStyle?: ViewStyle;
-    inputStyle?: TextStyle;
-    labelStyle?: TextStyle;
-    inputContainerStyle?: ViewStyle;
+    containerStyle?: StyleProp<ViewStyle>;
+    inputStyle?: StyleProp<TextStyle>;
+    labelStyle?: StyleProp<TextStyle>;
+    inputContainerStyle?: StyleProp<ViewStyle>;
     borderColorActive?: string;
     borderColorError?: string;
     borderColor?: string;
