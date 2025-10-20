@@ -49,6 +49,8 @@ export interface BottomSelectorProps<T = any>
   searchPlaceholder?: string;
   searchInputStyle?: StyleProp<ViewStyle>;
   onSearchChange?: (searchText: string) => void;
+  buttonCancelStyle?: StyleProp<ViewStyle>;
+  buttonCancelTextStyle?: StyleProp<TextStyle>;
 }
 
 const DEFAULT_MAX_HEIGHT = SCREEN_HEIGHT * 0.45;
@@ -74,6 +76,8 @@ export function BottomSelector<T = any>({
   enableSearch = false,
   searchPlaceholder = 'Tìm kiếm...',
   searchInputStyle,
+  buttonCancelStyle,
+  buttonCancelTextStyle,
   onSearchChange,
   ...modalProps
 }: BottomSelectorProps<T>) {
@@ -282,6 +286,7 @@ export function BottomSelector<T = any>({
                 styles.cancelButton,
                 isDark ? styles.cancelButtonDark : styles.cancelButtonLight,
                 !isSearchFocused && { marginBottom: insets.bottom },
+                buttonCancelStyle,
               ]}
               onPress={handleClose}
               activeOpacity={0.7}
@@ -292,6 +297,7 @@ export function BottomSelector<T = any>({
                   isDark
                     ? styles.cancelButtonTextDark
                     : styles.cancelButtonTextLight,
+                  buttonCancelTextStyle,
                 ]}
               >
                 {cancelText}

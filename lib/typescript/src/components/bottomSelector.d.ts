@@ -29,6 +29,8 @@ export interface BottomSelectorProps<T = any> extends Partial<Omit<ModalProps, '
     searchPlaceholder?: string;
     searchInputStyle?: StyleProp<ViewStyle>;
     onSearchChange?: (searchText: string) => void;
+    buttonCancelStyle?: StyleProp<ViewStyle>;
+    buttonCancelTextStyle?: StyleProp<TextStyle>;
 }
-export declare function BottomSelector<T = any>({ isVisible, onClose, options, onSelect, title, selectedValue, showSelectedIcon, containerStyle, optionStyle, titleStyle, optionTextStyle, selectedOptionStyle, disabledOptionStyle, cancelText, showCancelButton, emptyText, initialNumToRender, enableSearch, searchPlaceholder, searchInputStyle, onSearchChange, ...modalProps }: BottomSelectorProps<T>): import("react/jsx-runtime").JSX.Element;
+export declare function BottomSelector<T = any>({ isVisible, onClose, options, onSelect, title, selectedValue, showSelectedIcon, containerStyle, optionStyle, titleStyle, optionTextStyle, selectedOptionStyle, disabledOptionStyle, cancelText, showCancelButton, emptyText, initialNumToRender, enableSearch, searchPlaceholder, searchInputStyle, buttonCancelStyle, buttonCancelTextStyle, onSearchChange, ...modalProps }: BottomSelectorProps<T>): import("react/jsx-runtime").JSX.Element;
 //# sourceMappingURL=bottomSelector.d.ts.map
