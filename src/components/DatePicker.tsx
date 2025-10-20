@@ -19,6 +19,7 @@ import { Button } from './button';
 import { ShadowedView } from 'react-native-fast-shadow';
 import { Calendar, type DateData } from 'react-native-calendars';
 import type { MarkingTypes } from 'react-native-calendars/src/types';
+import { SCREEN_WIDTH } from '../utils';
 
 export interface DatePickerProps {
   // Basic Props
@@ -40,6 +41,8 @@ export interface DatePickerProps {
   fullWidth?: boolean;
   shadowColor?: string;
   noteDescription?: string;
+  enableMonthYearPicker?: boolean; // Enable month/year picker when clicking header
+  localeConfig?: string;
 
   // Style Props - Main Container
   containerStyle?: ViewStyle;
@@ -182,6 +185,8 @@ export function DatePicker({
   fullWidth = true,
   shadowColor = '#000000',
   noteDescription,
+  enableMonthYearPicker = true,
+  localeConfig = 'en',
 
   // Style Props - Main Container
   containerStyle,
@@ -300,6 +305,32 @@ export function DatePicker({
   const [tempSelectedDate, setTempSelectedDate] = useState<string | undefined>(
     value
   );
+  const [pickerView, setPickerView] = useState<'date' | 'month' | 'year'>(
+    'date'
+  );
+  const [currentMonth, setCurrentMonth] = useState(() => {
+    if (value) {
+      const [year, month] = value.split('-');
+      return `${year}-${month}`;
+    }
+    const now = new Date();
+    return `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}`;
+  });
+  const [selectedYear, setSelectedYear] = useState(() => {
+    if (value) {
+      return parseInt(
+        value.split('-')[0] ?? String(new Date().getFullYear()),
+        10
+      );
+    }
+    return new Date().getFullYear();
+  });
+  const [currentDecade, setCurrentDecade] = useState(() => {
+    const year = value
+      ? parseInt(value.split('-')[0] ?? String(new Date().getFullYear()), 10)
+      : new Date().getFullYear();
+    return Math.floor(year / 10) * 10;
+  });
 
   const hasError = isError || !!errorText;
 
@@ -400,6 +431,12 @@ export function DatePicker({
       setTempSelectedDate(value);
       setIsModalVisible(true);
       setIsFocused(true);
+      setPickerView('date');
+      // Reset decade to selected year's decade
+      const year = value
+        ? parseInt(value.split('-')[0] ?? String(new Date().getFullYear()), 10)
+        : new Date().getFullYear();
+      setCurrentDecade(Math.floor(year / 10) * 10);
       onOpen?.();
       onFocus?.();
     }
@@ -409,6 +446,7 @@ export function DatePicker({
     setIsModalVisible(false);
     setIsFocused(false);
     setTempSelectedDate(undefined);
+    setPickerView('date');
     onClose?.();
     onBlur?.();
   };
@@ -428,6 +466,53 @@ export function DatePicker({
 
   const handleDayPress = (day: DateData) => {
     setTempSelectedDate(day.dateString);
+  };
+
+  const handleMonthPress = (month: number) => {
+    const year = selectedYear;
+    const monthStr = String(month).padStart(2, '0');
+    setCurrentMonth(`${year}-${monthStr}`);
+    setPickerView('date');
+  };
+
+  const handlePreviousYear = () => {
+    const newYear = selectedYear - 1;
+    if (minDate) {
+      const minYear = parseInt(minDate.split('-')[0] ?? '0', 10);
+      if (newYear >= minYear) {
+        setSelectedYear(newYear);
+      }
+    } else {
+      setSelectedYear(newYear);
+    }
+  };
+
+  const handleNextYear = () => {
+    const newYear = selectedYear + 1;
+    if (maxDate) {
+      const maxYear = parseInt(maxDate.split('-')[0] ?? '9999', 10);
+      if (newYear <= maxYear) {
+        setSelectedYear(newYear);
+      }
+    } else {
+      setSelectedYear(newYear);
+    }
+  };
+
+  const handleYearPress = (year: number) => {
+    setSelectedYear(year);
+    setCurrentDecade(Math.floor(year / 10) * 10);
+    setPickerView('month');
+  };
+
+  const handleHeaderPress = () => {
+    if (enableMonthYearPicker) {
+      if (pickerView === 'date') {
+        setPickerView('month');
+      } else if (pickerView === 'month') {
+        setPickerView('year');
+      }
+    }
   };
 
   const getContainerStyles = (): ViewStyle => {
@@ -611,6 +696,182 @@ export function DatePicker({
     return marked;
   }, [tempSelectedDate, customMarkedDates, dynamicStyles]);
 
+  const renderMonthPicker = () => {
+    const listMonth = Array.from({ length: 12 }, (_, i) =>
+      new Date(0, i).toLocaleString(localeConfig, { month: 'long' })
+    );
+
+    return (
+      <View style={styles.pickerContainer}>
+        <View style={[styles.pickerHeader, styles.pickMonthHeader]}>
+          <Pressable onPress={handlePreviousYear} style={styles.yearButton}>
+            <CustomText
+              variant="body"
+              style={[styles.yearArrow, { color: borderColorActive }]}
+            >
+              ‹
+            </CustomText>
+          </Pressable>
+
+          <Pressable onPress={handleHeaderPress}>
+            <CustomText
+              style={styles.yearSelected}
+              color="primary"
+              variant="h6"
+            >
+              {selectedYear}
+            </CustomText>
+          </Pressable>
+
+          <Pressable onPress={handleNextYear} style={styles.yearButton}>
+            <CustomText
+              variant="body"
+              style={[styles.yearArrow, { color: borderColorActive }]}
+            >
+              ›
+            </CustomText>
+          </Pressable>
+        </View>
+        <View style={styles.monthGrid}>
+          {listMonth.map((month, index) => {
+            const monthNum = index + 1;
+            const monthDate = `${selectedYear}-${String(monthNum).padStart(2, '0')}-01`;
+            const isSelected =
+              currentMonth ===
+              `${selectedYear}-${String(monthNum).padStart(2, '0')}`;
+            const isMonthDisabled =
+              (minDate && monthDate < minDate) ||
+              (maxDate && monthDate > maxDate);
+            return (
+              <Pressable
+                key={month}
+                style={[
+                  styles.monthItem,
+                  isSelected && {
+                    backgroundColor: dynamicStyles.selectedDayBackgroundColor,
+                  },
+                  isMonthDisabled && styles.disabledItem,
+                ]}
+                onPress={() => !isMonthDisabled && handleMonthPress(monthNum)}
+                disabled={!!isMonthDisabled}
+              >
+                <CustomText
+                  variant="body"
+                  style={[
+                    styles.monthText,
+                    isSelected && { color: selectedDayTextColor },
+                    !isSelected && { color: dynamicStyles.textColor },
+                    isMonthDisabled && styles.disabledText,
+                  ]}
+                >
+                  {month}
+                </CustomText>
+              </Pressable>
+            );
+          })}
+        </View>
+      </View>
+    );
+  };
+
+  const renderYearPicker = () => {
+    const years = Array.from({ length: 10 }, (_, i) => currentDecade + i);
+    const decadeStart = currentDecade;
+    const decadeEnd = currentDecade + 9;
+
+    const handlePreviousDecade = () => {
+      const newDecade = currentDecade - 10;
+      if (minDate) {
+        const minYear = parseInt(minDate.split('-')[0] ?? '0', 10);
+        const minDecade = Math.floor(minYear / 10) * 10;
+        if (newDecade >= minDecade) {
+          setCurrentDecade(newDecade);
+        }
+      } else {
+        setCurrentDecade(newDecade);
+      }
+    };
+
+    const handleNextDecade = () => {
+      const newDecade = currentDecade + 10;
+      if (maxDate) {
+        const maxYear = parseInt(maxDate.split('-')[0] ?? '9999', 10);
+        const maxDecade = Math.floor(maxYear / 10) * 10;
+        if (newDecade <= maxDecade) {
+          setCurrentDecade(newDecade);
+        }
+      } else {
+        setCurrentDecade(newDecade);
+      }
+    };
+
+    return (
+      <View style={styles.pickerContainer}>
+        <View style={[styles.pickerHeader, styles.pickYearHeader]}>
+          <Pressable onPress={handlePreviousDecade} style={styles.decadeButton}>
+            <CustomText
+              variant="body"
+              style={[styles.decadeArrow, { color: borderColorActive }]}
+            >
+              ‹
+            </CustomText>
+          </Pressable>
+
+          <CustomText
+            variant="h6"
+            color="primary"
+            style={styles.headerYearPick}
+          >
+            {decadeStart} - {decadeEnd}
+          </CustomText>
+
+          <Pressable onPress={handleNextDecade} style={styles.decadeButton}>
+            <CustomText
+              variant="body"
+              style={[styles.decadeArrow, { color: borderColorActive }]}
+            >
+              ›
+            </CustomText>
+          </Pressable>
+        </View>
+        <View style={styles.yearGrid}>
+          {years.map((year) => {
+            const isSelected = selectedYear === year;
+            const isYearDisabled =
+              (minDate && year < parseInt(minDate.split('-')[0] ?? '0', 10)) ||
+              (maxDate && year > parseInt(maxDate.split('-')[0] ?? '9999', 10));
+            return (
+              <Pressable
+                key={year}
+                style={[
+                  styles.yearItem,
+                  isSelected && {
+                    backgroundColor: dynamicStyles.selectedDayBackgroundColor,
+                  },
+                  isYearDisabled && styles.disabledItem,
+                ]}
+                onPress={() => !isYearDisabled && handleYearPress(year)}
+                disabled={!!isYearDisabled}
+              >
+                <CustomText
+                  variant="body"
+                  style={[
+                    styles.yearText,
+                    isSelected && { color: selectedDayTextColor },
+                    !isSelected && { color: dynamicStyles.textColor },
+                    isYearDisabled && styles.disabledText,
+                  ]}
+                >
+                  {year}
+                </CustomText>
+              </Pressable>
+            );
+          })}
+        </View>
+      </View>
+    );
+  };
+
   const renderModalContent = () => {
     const isBottomModal = modalPosition === 'bottom';
 
@@ -696,27 +957,70 @@ export function DatePicker({
                   </View>
                 )}
 
-                {/* Calendar */}
+                {/* Calendar / Month Picker / Year Picker */}
                 <View style={styles.calendarContainer}>
-                  <Calendar
-                    current={tempSelectedDate ?? value ?? undefined}
-                    onDayPress={handleDayPress}
-                    markedDates={markedDatesConfig}
-                    markingType={markingType as MarkingTypes}
-                    minDate={minDate}
-                    maxDate={maxDate}
-                    theme={calendarThemeConfig}
-                    firstDay={firstDayOfWeek}
-                    showWeekNumbers={showWeekNumbers}
-                    disableAllTouchEventsForDisabledDays={
-                      disableAllTouchEventsForDisabledDays
-                    }
-                    enableSwipeMonths={enableSwipeMonths}
-                    hideExtraDays={hideExtraDays}
-                    hideDayNames={hideDayNames}
-                    hideArrows={hideArrows}
-                    monthFormat={monthFormat}
-                  />
+                  {pickerView === 'date' && (
+                    <Calendar
+                      current={currentMonth}
+                      onDayPress={handleDayPress}
+                      markedDates={markedDatesConfig}
+                      markingType={markingType as MarkingTypes}
+                      minDate={minDate}
+                      maxDate={maxDate}
+                      theme={calendarThemeConfig}
+                      firstDay={firstDayOfWeek}
+                      showWeekNumbers={showWeekNumbers}
+                      disableAllTouchEventsForDisabledDays={
+                        disableAllTouchEventsForDisabledDays
+                      }
+                      enableSwipeMonths={enableSwipeMonths}
+                      hideExtraDays={hideExtraDays}
+                      hideDayNames={hideDayNames}
+                      hideArrows={hideArrows}
+                      monthFormat={monthFormat}
+                      onPressArrowLeft={(subtractMonth) => {
+                        subtractMonth();
+                      }}
+                      onPressArrowRight={(addMonth) => {
+                        addMonth();
+                      }}
+                      renderHeader={(date) => {
+                        const monthNames = [
+                          'Tháng 1',
+                          'Tháng 2',
+                          'Tháng 3',
+                          'Tháng 4',
+                          'Tháng 5',
+                          'Tháng 6',
+                          'Tháng 7',
+                          'Tháng 8',
+                          'Tháng 9',
+                          'Tháng 10',
+                          'Tháng 11',
+                          'Tháng 12',
+                        ];
+                        const month = date?.getMonth() ?? 0;
+                        const year =
+                          date?.getFullYear() ?? new Date().getFullYear();
+                        return (
+                          <Pressable
+                            onPress={handleHeaderPress}
+                            style={styles.calendarHeaderContainer}
+                          >
+                            <CustomText
+                              variant="h6"
+                              color="primary"
+                              style={styles.calendarHeaderText}
+                            >
+                              {monthNames[month]} {year}
+                            </CustomText>
+                          </Pressable>
+                        );
+                      }}
+                    />
+                  )}
+                  {pickerView === 'month' && renderMonthPicker()}
+                  {pickerView === 'year' && renderYearPicker()}
                 </View>
 
                 {/* Modal Footer */}
@@ -999,5 +1303,112 @@ const styles = StyleSheet.create({
     lineHeight: 16,
     color: '#000000',
     textAlign: 'center',
+  },
+  pickerContainer: {
+    paddingHorizontal: 16,
+    paddingVertical: 16,
+  },
+  pickerHeader: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    marginBottom: 16,
+    paddingVertical: 8,
+    position: 'relative',
+  },
+  pickYearHeader: {
+    alignItems: 'center',
+    justifyContent: 'space-between',
+  },
+  pickMonthHeader: {
+    alignItems: 'center',
+    justifyContent: 'space-between',
+  },
+  backButton: {
+    position: 'absolute',
+    left: 0,
+    paddingHorizontal: 12,
+    paddingVertical: 4,
+  },
+  monthGrid: {
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    gap: 12,
+    justifyContent: 'space-between',
+  },
+  monthItem: {
+    width: SCREEN_WIDTH / 3 - 40,
+    borderRadius: 8,
+    justifyContent: 'center',
+    alignItems: 'center',
+    borderWidth: 1,
+    borderColor: '#E5E5EA',
+    paddingVertical: 12,
+  },
+  monthText: {
+    fontSize: 14,
+    fontWeight: '600',
+    lineHeight: 20,
+  },
+  yearGrid: {
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    gap: 12,
+    justifyContent: 'space-between',
+  },
+  yearItem: {
+    width: SCREEN_WIDTH / 3 - 40,
+    paddingVertical: 12,
+    borderRadius: 8,
+    alignItems: 'center',
+    justifyContent: 'center',
+    borderWidth: 1,
+    borderColor: '#E5E5EA',
+  },
+  yearText: {
+    fontSize: 14,
+    fontWeight: '500',
+    lineHeight: 24,
+  },
+  decadeButton: {
+    paddingHorizontal: 8,
+    paddingVertical: 4,
+  },
+  decadeArrow: {
+    fontSize: 24,
+    fontWeight: '600',
+  },
+  yearButton: {
+    paddingHorizontal: 8,
+    paddingVertical: 4,
+  },
+  yearArrow: {
+    fontSize: 24,
+    fontWeight: '600',
+  },
+  disabledItem: {
+    backgroundColor: '#F5F5F5',
+  },
+  disabledText: {
+    color: '#C7C7CC',
+  },
+  calendarHeaderContainer: {
+    paddingVertical: 8,
+    paddingHorizontal: 16,
+    alignItems: 'center',
+  },
+  calendarHeaderText: {
+    fontSize: 16,
+    fontWeight: '600',
+  },
+  headerYearPick: {
+    fontSize: 18,
+    lineHeight: 24,
+    fontWeight: 'bold',
+  },
+  yearSelected: {
+    fontSize: 18,
+    fontWeight: 'bold',
+    lineHeight: 24,
   },
 });

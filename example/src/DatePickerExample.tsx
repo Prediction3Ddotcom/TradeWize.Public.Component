@@ -72,7 +72,7 @@ export default function DatePickerExample() {
             value={selectedDate3}
             onChange={setSelectedDate3}
             minDate="2024-01-01"
-            maxDate="2024-12-31"
+            maxDate="2024-11-31"
             helperText="Chỉ được chọn từ 01/01/2024 đến 31/12/2024"
             variant="underline"
           />
