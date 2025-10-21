@@ -9,6 +9,7 @@ import {
   type ViewStyle,
   type ImageStyle,
   Image,
+  type TextStyle,
 } from 'react-native';
 import { ShadowedView } from 'react-native-fast-shadow';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
@@ -68,6 +69,8 @@ export interface MonthYearPickerProps {
   styleErrorText?: StyleProp<ViewStyle>;
   styleInputText?: StyleProp<ViewStyle>;
   styleLineIndicator?: StyleProp<ViewStyle>;
+  styleButtonTextCancel?: StyleProp<TextStyle>;
+  styleButtonTextConfirm?: StyleProp<TextStyle>;
   // Dimensions customization
   itemHeight?: number;
   visibleItems?: number;
@@ -147,6 +150,8 @@ const MonthYearPicker: React.FC<MonthYearPickerProps> = ({
   styleButton,
   styleCancelButton,
   styleConfirmButton,
+  styleButtonTextCancel,
+  styleButtonTextConfirm,
   styleErrorText,
   styleInputText,
   styleLineIndicator,
@@ -608,12 +613,14 @@ const MonthYearPicker: React.FC<MonthYearPickerProps> = ({
                 isDisabled={disabledCancel}
                 onPress={handleClose}
                 title={cancelButtonText}
+                textStyle={styleButtonTextCancel}
                 style={[styles.button, styleCancelButton, styleButton]}
               />
               <Button
                 disabled={disabledConfirm}
                 onPress={handleConfirm}
                 title={confirmButtonText}
+                textStyle={styleButtonTextConfirm}
                 style={[
                   styles.button,
                   { backgroundColor: buttonBackgroundColor },

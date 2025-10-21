@@ -1,5 +1,5 @@
 import React from 'react';
-import { type StyleProp, type ViewStyle, type ImageStyle } from 'react-native';
+import { type StyleProp, type ViewStyle, type ImageStyle, type TextStyle } from 'react-native';
 export interface MonthYearPickerProps {
     initialDate?: Date;
     minDate?: Date;
@@ -48,6 +48,8 @@ export interface MonthYearPickerProps {
     styleErrorText?: StyleProp<ViewStyle>;
     styleInputText?: StyleProp<ViewStyle>;
     styleLineIndicator?: StyleProp<ViewStyle>;
+    styleButtonTextCancel?: StyleProp<TextStyle>;
+    styleButtonTextConfirm?: StyleProp<TextStyle>;
     itemHeight?: number;
     visibleItems?: number;
     borderRadius?: number;
