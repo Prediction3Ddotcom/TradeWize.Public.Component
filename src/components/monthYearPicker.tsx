@@ -17,7 +17,7 @@ import { CustomText } from './text';
 import Modal from 'react-native-modal';
 import { SCREEN_HEIGHT } from '../utils';
 
-interface MonthYearPickerProps {
+export interface MonthYearPickerProps {
   initialDate?: Date;
   minDate?: Date;
   maxDate?: Date;

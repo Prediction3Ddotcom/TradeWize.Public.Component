@@ -9,6 +9,8 @@ export { DatePicker } from './components/DatePicker';
 export type { DatePickerProps } from './components/DatePicker';
 export { BottomSelector } from './components/bottomSelector';
 export type { BottomSelectorProps, BottomSelectorOption, } from './components/bottomSelector';
+export { default as MonthYearPicker } from './components/monthYearPicker';
+export type { MonthYearPickerProps } from './components/monthYearPicker';
 export { default as BaseContainer } from './components/baseContainer';
 export type { BaseContainerProps } from './components/baseContainer';
 export { default as HeaderBase } from './components/header';

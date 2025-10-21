@@ -1,6 +1,6 @@
 import React from 'react';
 import { type StyleProp, type ViewStyle, type ImageStyle } from 'react-native';
-interface MonthYearPickerProps {
+export interface MonthYearPickerProps {
     initialDate?: Date;
     minDate?: Date;
     maxDate?: Date;
