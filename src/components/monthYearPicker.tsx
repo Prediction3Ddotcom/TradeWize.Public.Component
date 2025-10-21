@@ -384,10 +384,14 @@ const MonthYearPicker: React.FC<MonthYearPickerProps> = ({
         </CustomText>
 
         {showIcon && (
-          <Image
-            source={iconCalendar || require('../assets/calendar.png')}
-            style={[styles.iconCalendar, iconCalendarStyle]}
-          />
+          <>
+            {iconCalendar || (
+              <Image
+                source={require('../assets/calendar.png')}
+                style={[styles.iconCalendar, iconCalendarStyle]}
+              />
+            )}
+          </>
         )}
       </Button>
 
