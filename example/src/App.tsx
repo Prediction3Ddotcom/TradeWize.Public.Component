@@ -4,6 +4,7 @@ import { TextExample } from './TextExample';
 import { InputExample } from './InputExample';
 import DatePickerExample from './DatePickerExample';
 import BottomSelectorExample from './BottomSelectorExample';
+import MonthYearPickerExample from './MonthYearPickerExample';
 import BaseContainer from '../../src/components/baseContainer';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 import HeaderBase from '../../src/components/header';
@@ -23,6 +24,7 @@ export default function App() {
               <InputExample />
               <DatePickerExample />
               <BottomSelectorExample />
+              <MonthYearPickerExample />
             </ScrollView>
           </BaseContainer>
         </SafeAreaProvider>
