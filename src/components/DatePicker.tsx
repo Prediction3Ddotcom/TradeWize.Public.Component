@@ -45,6 +45,7 @@ export interface DatePickerProps {
   localeConfig?: string;
   numberOfLinesErrorText?: number;
   monthNames?: string[];
+  formatTypeDateDisplayText?: string;
   // Style Props - Main Container
   containerStyle?: ViewStyle;
   inputStyle?: TextStyle;
@@ -189,6 +190,7 @@ export function DatePicker({
   enableMonthYearPicker = true,
   localeConfig = 'en',
   numberOfLinesErrorText,
+  formatTypeDateDisplayText,
   // Style Props - Main Container
   containerStyle,
   inputStyle,
@@ -375,19 +377,24 @@ export function DatePicker({
 
   // Format date for display
   const formatDisplayDate = useCallback(
-    (date?: string): string => {
+    (date?: string, format?: string): string => {
       if (!date) return placeholder;
 
+      // Nếu có formatDate function thì dùng luôn
       if (formatDate) {
         return formatDate(date);
       }
 
-      // Simple date formatting from YYYY-MM-DD to DD/MM/YYYY
+      // Simple date formatting from YYYY-MM-DD
       const parts = date.split('-');
       if (parts.length !== 3) return date;
 
       const [year, month, day] = parts;
-      return dateFormat
+
+      // Sử dụng format truyền vào nếu có, ngược lại dùng dateFormat từ state/props
+      const finalFormat = format || dateFormat || 'DD/MM/YYYY';
+
+      return finalFormat
         .replace('DD', day ?? '')
         .replace('MM', month ?? '')
         .replace('YYYY', year ?? '');
@@ -396,8 +403,8 @@ export function DatePicker({
   );
 
   const displayText = useMemo(
-    () => formatDisplayDate(value),
-    [value, formatDisplayDate]
+    () => formatDisplayDate(value, formatTypeDateDisplayText),
+    [value, formatDisplayDate, formatTypeDateDisplayText]
   );
 
   const getIconSize = useCallback((): number => {
