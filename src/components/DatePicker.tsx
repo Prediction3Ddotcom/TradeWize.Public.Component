@@ -5,10 +5,10 @@ import {
   Pressable,
   type ViewStyle,
   type TextStyle,
-  StatusBar,
   Dimensions,
   Image,
   type ImageStyle,
+  Platform,
 } from 'react-native';
 import { useColorScheme } from 'react-native';
 import type { ReactNode } from 'react';
@@ -44,7 +44,7 @@ export interface DatePickerProps {
   enableMonthYearPicker?: boolean; // Enable month/year picker when clicking header
   localeConfig?: string;
   numberOfLinesErrorText?: number;
-
+  monthNames?: string[];
   // Style Props - Main Container
   containerStyle?: ViewStyle;
   inputStyle?: TextStyle;
@@ -246,6 +246,20 @@ export function DatePicker({
   coverScreen = true,
   hasBackdrop = true,
   customBackdrop,
+  monthNames = [
+    'Tháng 1',
+    'Tháng 2',
+    'Tháng 3',
+    'Tháng 4',
+    'Tháng 5',
+    'Tháng 6',
+    'Tháng 7',
+    'Tháng 8',
+    'Tháng 9',
+    'Tháng 10',
+    'Tháng 11',
+    'Tháng 12',
+  ],
 
   // Text Props
   modalTitle,
@@ -669,6 +683,7 @@ export function DatePicker({
           marginTop: 5,
           flexDirection: 'row',
           justifyContent: 'space-between',
+          paddingHorizontal: 12,
         },
       },
       ...calendarTheme,
@@ -908,6 +923,8 @@ export function DatePicker({
         <ShadowedView
           style={[
             styles.shadowContainer,
+            Platform.OS === 'ios' && styles.shadowContainerIOS,
+            Platform.OS === 'android' && styles.shadowContainerAndroid,
             { shadowColor: shadowColor },
             shadowContentStyle,
           ]}
@@ -920,10 +937,6 @@ export function DatePicker({
             ]}
             onPress={handleCloseModal}
           >
-            <StatusBar
-              backgroundColor={`rgba(0, 0, 0, ${backdropOpacity})`}
-              barStyle={isDark ? 'light-content' : 'light-content'}
-            />
             <View
               style={[
                 styles.modalSafeArea,
@@ -986,20 +999,6 @@ export function DatePicker({
                         addMonth();
                       }}
                       renderHeader={(date) => {
-                        const monthNames = [
-                          'Tháng 1',
-                          'Tháng 2',
-                          'Tháng 3',
-                          'Tháng 4',
-                          'Tháng 5',
-                          'Tháng 6',
-                          'Tháng 7',
-                          'Tháng 8',
-                          'Tháng 9',
-                          'Tháng 10',
-                          'Tháng 11',
-                          'Tháng 12',
-                        ];
                         const month = date?.getMonth() ?? 0;
                         const year =
                           date?.getFullYear() ?? new Date().getFullYear();
@@ -1221,7 +1220,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   modalSafeArea: {
-    width: '100%',
+    // width: '100%',
     alignItems: 'center',
     justifyContent: 'center',
     backgroundColor: '#FFFFFF',
@@ -1276,6 +1275,8 @@ const styles = StyleSheet.create({
   },
   calendarContainer: {
     paddingVertical: 8,
+    width: SCREEN_WIDTH - 32,
+    alignSelf: 'center',
   },
   modalFooter: {
     borderTopWidth: 1,
@@ -1290,15 +1291,21 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     gap: 12,
+    paddingHorizontal: 12,
   },
   shadowContainer: {
     flex: 1,
+  },
+  shadowContainerIOS: {
     shadowOpacity: 0.4,
     shadowRadius: 12,
     shadowOffset: {
       width: 5,
       height: 3,
     },
+  },
+  shadowContainerAndroid: {
+    elevation: 4,
   },
   noteDescription: {
     fontSize: 12,
