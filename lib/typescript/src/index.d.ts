@@ -1,6 +1,8 @@
 export declare function multiply(a: number, b: number): number;
 export { Button } from './components/button';
 export type { ButtonProps } from './components/button';
+export { CheckboxButton } from './components/checkboxButton';
+export type { CheckboxButtonProps } from './components/checkboxButton';
 export { CustomText as Text } from './components/text';
 export type { TextProps } from './components/text';
 export { Input } from './components/input';

@@ -14,7 +14,6 @@ export interface ButtonProps extends Omit<TouchableOpacityProps, 'style'> {
     style?: StyleProp<ViewStyle>;
     textStyle?: StyleProp<TextStyle>;
     iconSpacing?: number;
-    customButtonStyle?: StyleProp<ViewStyle>;
 }
-export declare function Button({ title, children, leftIcon, rightIcon, iconOnly, variant, size, isLoading, isDisabled, fullWidth, style, textStyle, iconSpacing, onPress, customButtonStyle, ...props }: ButtonProps): import("react/jsx-runtime").JSX.Element;
+export declare function Button({ title, children, leftIcon, rightIcon, iconOnly, variant, size, isLoading, isDisabled, fullWidth, style, textStyle, iconSpacing, onPress, ...props }: ButtonProps): import("react/jsx-runtime").JSX.Element;
 //# sourceMappingURL=button.d.ts.map

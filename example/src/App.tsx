@@ -1,5 +1,6 @@
 import { ScrollView, StyleSheet } from 'react-native';
 import { ButtonExample } from './ButtonExample';
+import { CheckboxButtonExample } from './CheckboxButtonExample';
 import { TextExample } from './TextExample';
 import { InputExample } from './InputExample';
 import DatePickerExample from './DatePickerExample';
@@ -21,6 +22,7 @@ export default function App() {
             <ScrollView>
               <TextExample />
               <ButtonExample />
+              <CheckboxButtonExample />
               <InputExample />
               <DatePickerExample />
               <BottomSelectorExample />
