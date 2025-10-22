@@ -5,6 +5,7 @@ import {
   StatusBar,
   type ViewStyle,
   type StyleProp,
+  Platform,
 } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
@@ -27,6 +28,9 @@ const BaseContainer: React.FC<BaseContainerProps> = ({
 }) => {
   const insets = useSafeAreaInsets();
 
+  const getPaddingBottom = () =>
+    insets.bottom + (Platform.OS === 'ios' ? 0 : 8);
+
   return (
     <View
       style={[
@@ -42,7 +46,7 @@ const BaseContainer: React.FC<BaseContainerProps> = ({
       <View style={[styles.content, style]}>
         {children}
         {isPaddingToSafeArea && (
-          <View style={{ height: insets.bottom, backgroundColor }} />
+          <View style={{ height: getPaddingBottom(), backgroundColor }} />
         )}
       </View>
     </View>
