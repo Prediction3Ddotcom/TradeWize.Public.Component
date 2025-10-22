@@ -43,6 +43,7 @@ export interface DatePickerProps {
   noteDescription?: string;
   enableMonthYearPicker?: boolean; // Enable month/year picker when clicking header
   localeConfig?: string;
+  numberOfLinesErrorText?: number;
 
   // Style Props - Main Container
   containerStyle?: ViewStyle;
@@ -187,7 +188,7 @@ export function DatePicker({
   noteDescription,
   enableMonthYearPicker = true,
   localeConfig = 'en',
-
+  numberOfLinesErrorText,
   // Style Props - Main Container
   containerStyle,
   inputStyle,
@@ -1171,6 +1172,7 @@ export function DatePicker({
             styles.helperText,
             hasError ? errorTextStyle : helperTextStyle,
           ]}
+          numberOfLines={numberOfLinesErrorText}
         >
           {errorText ?? helperText}
         </CustomText>
