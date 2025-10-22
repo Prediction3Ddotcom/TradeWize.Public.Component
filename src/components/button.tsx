@@ -33,6 +33,7 @@ export interface ButtonProps extends Omit<TouchableOpacityProps, 'style'> {
   style?: StyleProp<ViewStyle>;
   textStyle?: StyleProp<TextStyle>;
   iconSpacing?: number;
+  customButtonStyle?: StyleProp<ViewStyle>;
 }
 
 export function Button({
@@ -50,6 +51,7 @@ export function Button({
   textStyle,
   iconSpacing = 8,
   onPress,
+  customButtonStyle,
   ...props
 }: ButtonProps) {
   const colorScheme = useColorScheme();
@@ -286,7 +288,9 @@ export function Button({
 
   return (
     <TouchableOpacity
-      style={[getButtonStyles(), style]}
+      style={
+        customButtonStyle ? customButtonStyle : [(getButtonStyles(), style)]
+      }
       onPress={handlePress}
       disabled={isDisabled || isLoading}
       activeOpacity={0.7}
