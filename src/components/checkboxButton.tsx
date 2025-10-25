@@ -23,6 +23,7 @@ export interface CheckboxButtonProps
   textStyle?: StyleProp<TextStyle>;
   checkboxStyle?: StyleProp<ViewStyle>;
   spacing?: number;
+  customCheckmark?: React.ReactNode;
 }
 
 export function CheckboxButton({
@@ -38,6 +39,7 @@ export function CheckboxButton({
   checkboxStyle,
   spacing = 8,
   onPress,
+  customCheckmark,
   ...props
 }: CheckboxButtonProps) {
   const colorScheme = useColorScheme();
@@ -174,6 +176,10 @@ export function CheckboxButton({
 
     const checkmarkSize = getCheckboxSize() * 0.6;
 
+    if (customCheckmark) {
+      return customCheckmark;
+    }
+
     return (
       <View style={styles.checkmark}>
         <CustomText
@@ -181,6 +187,7 @@ export function CheckboxButton({
             styles.checkmarkText,
             {
               fontSize: checkmarkSize,
+              lineHeight: checkmarkSize * 1.2,
             },
           ]}
         >
