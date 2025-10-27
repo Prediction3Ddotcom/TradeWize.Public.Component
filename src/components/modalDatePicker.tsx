@@ -8,15 +8,14 @@ import { useState } from 'react';
 export interface DatePickerModalProps {
   openDatePicker: boolean;
   setOpenDatePicker: (open: boolean) => void;
-  setDate: (date: Date) => void;
   onChangeDate: (date: Date) => void;
-  title: string;
-  confirmButtonText: string;
-  cancelButtonText: string;
-  dividerColor: string;
-  maxDate: Date;
-  minDate: Date;
-  initialDate: Date;
+  title?: string;
+  confirmButtonText?: string;
+  cancelButtonText?: string;
+  dividerColor?: string;
+  maxDate?: Date;
+  minDate?: Date;
+  initialDate?: Date;
 }
 
 const DatePickerModal = ({
