@@ -168,6 +168,7 @@
     "version": "0.54.3"
   },
   "dependencies": {
+    "@react-native-community/datetimepicker": "^8.5.0",
     "react-native-calendars": "^1.1313.0",
     "react-native-date-picker": "5.0.12",
     "react-native-fast-shadow": "^0.1.1",
