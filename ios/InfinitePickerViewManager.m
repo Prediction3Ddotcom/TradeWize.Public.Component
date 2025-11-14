@@ -1,4 +1,5 @@
 #import <React/RCTViewManager.h>
+#import <React/RCTUIManager.h>
 
 @interface RCT_EXTERN_MODULE(InfinitePickerViewManager, RCTViewManager)
 

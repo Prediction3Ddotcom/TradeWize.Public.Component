@@ -13,6 +13,7 @@ export interface InfinitePickerProps {
     style?: StyleProp<ViewStyle>;
 }
 export interface WheelMonthYearPickerProps {
+    isVisible: boolean;
     initialDate?: Date;
     minDate?: Date;
     maxDate?: Date;

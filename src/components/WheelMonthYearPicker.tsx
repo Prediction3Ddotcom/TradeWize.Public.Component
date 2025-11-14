@@ -32,6 +32,7 @@ export interface InfinitePickerProps {
 }
 
 export interface WheelMonthYearPickerProps {
+  isVisible: boolean;
   initialDate?: Date;
   minDate?: Date;
   maxDate?: Date;
@@ -65,6 +66,7 @@ function getNativeInfinitePicker() {
 
 const WheelMonthYearPicker = (props: WheelMonthYearPickerProps) => {
   const {
+    isVisible,
     initialDate,
     minDate,
     maxDate,
@@ -295,7 +297,7 @@ const WheelMonthYearPicker = (props: WheelMonthYearPickerProps) => {
     <ReactNativeModal
       backdropOpacity={0.2}
       style={styles.modal}
-      isVisible={true}
+      isVisible={isVisible}
     >
       <View style={styles.container}>
         {renderHeader}
