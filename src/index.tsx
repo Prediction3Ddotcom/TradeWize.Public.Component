@@ -20,8 +20,6 @@ export type {
   BottomSelectorProps,
   BottomSelectorOption,
 } from './components/bottomSelector';
-export { default as MonthYearPicker } from './components/monthYearPicker';
-export type { MonthYearPickerProps } from './components/monthYearPicker';
 export { default as DatePickerModal } from './components/modalDatePicker';
 export type { DatePickerModalProps } from './components/modalDatePicker';
 export { default as WheelDatePicker } from './components/WheelDatePicker';

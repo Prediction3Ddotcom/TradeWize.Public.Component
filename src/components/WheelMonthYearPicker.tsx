@@ -51,8 +51,17 @@ export interface WheelMonthYearPickerProps {
   onCancel?: () => void;
 }
 
-const NativeInfinitePicker =
-  requireNativeComponent<InfinitePickerProps>('InfinitePickerView');
+// Lazy initialization to prevent duplicate registration with Re.pack
+let NativeInfinitePicker: React.ComponentType<InfinitePickerProps> | null =
+  null;
+
+function getNativeInfinitePicker() {
+  if (NativeInfinitePicker === null) {
+    NativeInfinitePicker =
+      requireNativeComponent<InfinitePickerProps>('InfinitePickerView');
+  }
+  return NativeInfinitePicker;
+}
 
 const WheelMonthYearPicker = (props: WheelMonthYearPickerProps) => {
   const {
@@ -191,6 +200,8 @@ const WheelMonthYearPicker = (props: WheelMonthYearPickerProps) => {
     }
   }, [selectedItem.month, selectedItem.year, years, minDate, maxDate]);
 
+  const NativePickerComponent = useMemo(() => getNativeInfinitePicker(), []);
+
   const renderWheelPickerByPlatform = useMemo(() => {
     if (Platform.OS === 'ios') {
       return (
@@ -202,7 +213,7 @@ const WheelMonthYearPicker = (props: WheelMonthYearPickerProps) => {
           ]}
         >
           <View style={styles.pickerItem}>
-            <NativeInfinitePicker
+            <NativePickerComponent
               infiniteLoop
               selectedIndex={selectedItem.month}
               style={[styles.pickerItemIos, stylePickerIosItem]}
@@ -213,7 +224,7 @@ const WheelMonthYearPicker = (props: WheelMonthYearPickerProps) => {
             />
           </View>
           <View style={styles.pickerItem}>
-            <NativeInfinitePicker
+            <NativePickerComponent
               selectedIndex={selectedItem.year}
               style={[styles.pickerItemIos, stylePickerIosItem]}
               items={years}
@@ -254,6 +265,7 @@ const WheelMonthYearPicker = (props: WheelMonthYearPickerProps) => {
       );
     }
   }, [
+    NativePickerComponent,
     indicatorColor,
     onItemSelected,
     selectedItem.month,
