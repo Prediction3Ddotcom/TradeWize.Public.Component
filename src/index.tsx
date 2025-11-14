@@ -26,7 +26,8 @@ export { default as DatePickerModal } from './components/modalDatePicker';
 export type { DatePickerModalProps } from './components/modalDatePicker';
 export { default as WheelDatePicker } from './components/WheelDatePicker';
 export type { WheelDatePickerProps } from './components/WheelDatePicker';
-
+export { default as WheelMonthYearPicker } from './components/WheelMonthYearPicker';
+export type { WheelMonthYearPickerProps } from './components/WheelMonthYearPicker';
 export { default as BaseContainer } from './components/baseContainer';
 export type { BaseContainerProps } from './components/baseContainer';
 export { default as HeaderBase } from './components/header';
