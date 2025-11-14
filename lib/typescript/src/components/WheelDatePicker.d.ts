@@ -1,6 +1,6 @@
 import { type StyleProp, type TextStyle, type ViewStyle } from 'react-native';
 export interface WheelDatePickerProps {
-    date: Date;
+    initialDate: Date;
     isVisible: boolean;
     title?: string;
     helperText?: string;
@@ -8,6 +8,10 @@ export interface WheelDatePickerProps {
     confirmButtonText?: string;
     confirmButtonTextStyle?: StyleProp<TextStyle>;
     confirmButtonStyle?: StyleProp<ViewStyle>;
+    maxDate?: Date;
+    minDate?: Date;
+    customHeader?: React.ReactNode;
+    customFooter?: React.ReactNode;
     confirmButtonOnPress?: (date: string) => void;
     cancelButtonText?: string;
     cancelButtonTextStyle?: StyleProp<TextStyle>;
@@ -16,6 +20,6 @@ export interface WheelDatePickerProps {
     contentStyle?: StyleProp<ViewStyle>;
     titleStyle?: StyleProp<TextStyle>;
 }
-declare const WheelDatePicker: ({ date, isVisible, title, helperText, helperTextStyle, confirmButtonText, confirmButtonTextStyle, confirmButtonStyle, confirmButtonOnPress, cancelButtonText, cancelButtonTextStyle, cancelButtonStyle, cancelButtonOnPress, contentStyle, titleStyle, }: WheelDatePickerProps) => import("react/jsx-runtime").JSX.Element;
+declare const WheelDatePicker: ({ initialDate, isVisible, title, helperText, helperTextStyle, confirmButtonText, confirmButtonTextStyle, confirmButtonStyle, confirmButtonOnPress, cancelButtonText, cancelButtonTextStyle, cancelButtonStyle, cancelButtonOnPress, contentStyle, titleStyle, maxDate, minDate, customHeader, customFooter, }: WheelDatePickerProps) => import("react/jsx-runtime").JSX.Element;
 export default WheelDatePicker;
 //# sourceMappingURL=WheelDatePicker.d.ts.map

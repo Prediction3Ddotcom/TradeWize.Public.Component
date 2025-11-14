@@ -15,10 +15,10 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { SCREEN_HEIGHT } from '../utils';
 import { CustomText } from './text';
 import { Button } from './button';
-import { useState } from 'react';
+import { useMemo, useState } from 'react';
 
 export interface WheelDatePickerProps {
-  date: Date;
+  initialDate: Date;
   isVisible: boolean;
   title?: string;
   helperText?: string;
@@ -26,6 +26,10 @@ export interface WheelDatePickerProps {
   confirmButtonText?: string;
   confirmButtonTextStyle?: StyleProp<TextStyle>;
   confirmButtonStyle?: StyleProp<ViewStyle>;
+  maxDate?: Date;
+  minDate?: Date;
+  customHeader?: React.ReactNode;
+  customFooter?: React.ReactNode;
   confirmButtonOnPress?: (date: string) => void;
   cancelButtonText?: string;
   cancelButtonTextStyle?: StyleProp<TextStyle>;
@@ -36,7 +40,7 @@ export interface WheelDatePickerProps {
 }
 
 const WheelDatePicker = ({
-  date = new Date(),
+  initialDate = new Date(),
   isVisible,
   title,
   helperText,
@@ -51,6 +55,10 @@ const WheelDatePicker = ({
   cancelButtonOnPress,
   contentStyle,
   titleStyle,
+  maxDate,
+  minDate,
+  customHeader,
+  customFooter,
 }: WheelDatePickerProps) => {
   const insets = useSafeAreaInsets();
 
@@ -68,6 +76,39 @@ const WheelDatePicker = ({
     setFormattedDate(formatted);
   };
 
+  const renderHeader = useMemo(() => {
+    if (customHeader) {
+      return customHeader;
+    }
+    return (
+      <>
+        {title && (
+          <CustomText variant="h4" style={[styles.title, titleStyle]}>
+            {title}
+          </CustomText>
+        )}
+      </>
+    );
+  }, [customHeader, title, titleStyle]);
+
+  const renderFooter = useMemo(() => {
+    if (customFooter) {
+      return customFooter;
+    }
+    return (
+      <>
+        {helperText && (
+          <CustomText
+            variant="body"
+            style={[styles.helperText, helperTextStyle]}
+          >
+            {helperText}
+          </CustomText>
+        )}
+      </>
+    );
+  }, [customFooter, helperText, helperTextStyle]);
+
   return (
     <ReactNativeModal
       style={styles.modal}
@@ -78,14 +119,12 @@ const WheelDatePicker = ({
       <View style={styles.container}>
         <View style={[styles.content, contentStyle]}>
           <View style={styles.contentContainer}>
-            {title && (
-              <CustomText variant="h4" style={[styles.title, titleStyle]}>
-                {title}
-              </CustomText>
-            )}
+            {renderHeader}
             {Platform.OS === 'ios' ? (
               <DateTimePickerIOS
-                value={date}
+                value={initialDate}
+                maximumDate={maxDate}
+                minimumDate={minDate}
                 onChange={(
                   _event: DateTimePickerEvent,
                   selectedDate: Date | undefined
@@ -98,8 +137,10 @@ const WheelDatePicker = ({
               />
             ) : (
               <DateTimePickerAndroid
+                maximumDate={maxDate}
+                minimumDate={minDate}
                 mode="date"
-                date={date}
+                date={initialDate}
                 onDateChange={(dateSelected: Date) => {
                   if (dateSelected) {
                     handleDateChange(dateSelected);
@@ -107,16 +148,7 @@ const WheelDatePicker = ({
                 }}
               />
             )}
-
-            {helperText && (
-              <CustomText
-                variant="body"
-                style={[styles.helperText, helperTextStyle]}
-              >
-                {helperText}
-              </CustomText>
-            )}
-
+            {renderFooter}
             <Button
               fullWidth
               textStyle={confirmButtonTextStyle}
