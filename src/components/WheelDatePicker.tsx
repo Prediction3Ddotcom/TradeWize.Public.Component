@@ -165,7 +165,8 @@ const WheelDatePicker = ({
         <View
           style={[
             styles.footerContainer,
-            { paddingBottom: insets.bottom + 12 },
+            // eslint-disable-next-line react-native/no-inline-styles
+            { paddingBottom: insets.bottom > 0 ? insets.bottom : 12 },
           ]}
         >
           <Button
