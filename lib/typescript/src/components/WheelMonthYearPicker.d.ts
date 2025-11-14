@@ -1,5 +1,5 @@
 import React from 'react';
-import { type StyleProp, type ViewStyle } from 'react-native';
+import { type StyleProp, type TextStyle, type ViewStyle } from 'react-native';
 export interface InfinitePickerProps {
     items?: string[];
     infiniteLoop?: boolean;
@@ -24,6 +24,8 @@ export interface WheelMonthYearPickerProps {
     textCancel?: string;
     styleButtonConfirm?: StyleProp<ViewStyle>;
     styleButtonCancel?: StyleProp<ViewStyle>;
+    styleTextConfirm?: StyleProp<TextStyle>;
+    styleTextCancel?: StyleProp<TextStyle>;
     indicatorColor?: string;
     wheelMonthData?: string[];
     stylePickerIosItem?: StyleProp<ViewStyle>;

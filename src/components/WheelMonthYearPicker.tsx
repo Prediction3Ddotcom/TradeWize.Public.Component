@@ -6,6 +6,7 @@ import {
   View,
   requireNativeComponent,
   type StyleProp,
+  type TextStyle,
   type ViewStyle,
 } from 'react-native';
 import ReactNativeModal from 'react-native-modal';
@@ -43,6 +44,8 @@ export interface WheelMonthYearPickerProps {
   textCancel?: string;
   styleButtonConfirm?: StyleProp<ViewStyle>;
   styleButtonCancel?: StyleProp<ViewStyle>;
+  styleTextConfirm?: StyleProp<TextStyle>;
+  styleTextCancel?: StyleProp<TextStyle>;
   indicatorColor?: string;
   wheelMonthData?: string[];
   stylePickerIosItem?: StyleProp<ViewStyle>;
@@ -78,6 +81,8 @@ const WheelMonthYearPicker: React.FC<WheelMonthYearPickerProps> = (props) => {
     textCancel,
     styleButtonConfirm,
     styleButtonCancel,
+    styleTextConfirm,
+    styleTextCancel,
     indicatorColor,
     stylePickerIosItem,
     wheelMonthData = [
@@ -305,6 +310,7 @@ const WheelMonthYearPicker: React.FC<WheelMonthYearPickerProps> = (props) => {
 
         {renderWheelPickerByPlatform}
         <Button
+          textStyle={styleTextConfirm}
           title={textConfirm || 'Confirm'}
           style={[styles.buttonConfirm, styleButtonConfirm]}
           onPress={handleConfirm}
@@ -312,6 +318,7 @@ const WheelMonthYearPicker: React.FC<WheelMonthYearPickerProps> = (props) => {
       </View>
       <View style={styles.footerContainerWithPadding}>
         <Button
+          textStyle={styleTextCancel}
           title={textCancel || 'Cancel'}
           style={[styles.buttonCancel, styleButtonCancel]}
           onPress={onCancel}
