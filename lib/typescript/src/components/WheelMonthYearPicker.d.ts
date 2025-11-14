@@ -1,3 +1,4 @@
+import React from 'react';
 import { type StyleProp, type ViewStyle } from 'react-native';
 export interface InfinitePickerProps {
     items?: string[];
@@ -13,7 +14,7 @@ export interface InfinitePickerProps {
     style?: StyleProp<ViewStyle>;
 }
 export interface WheelMonthYearPickerProps {
-    isVisible: boolean;
+    isVisible?: boolean;
     initialDate?: Date;
     minDate?: Date;
     maxDate?: Date;
@@ -30,6 +31,6 @@ export interface WheelMonthYearPickerProps {
     handleSelectedDate?: (date: string) => void;
     onCancel?: () => void;
 }
-declare const WheelMonthYearPicker: (props: WheelMonthYearPickerProps) => import("react/jsx-runtime").JSX.Element;
+declare const WheelMonthYearPicker: React.FC<WheelMonthYearPickerProps>;
 export default WheelMonthYearPicker;
 //# sourceMappingURL=WheelMonthYearPicker.d.ts.map

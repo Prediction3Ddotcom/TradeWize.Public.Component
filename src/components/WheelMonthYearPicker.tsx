@@ -1,3 +1,4 @@
+import React from 'react';
 import {
   Dimensions,
   Platform,
@@ -32,7 +33,7 @@ export interface InfinitePickerProps {
 }
 
 export interface WheelMonthYearPickerProps {
-  isVisible: boolean;
+  isVisible?: boolean;
   initialDate?: Date;
   minDate?: Date;
   maxDate?: Date;
@@ -64,7 +65,7 @@ function getNativeInfinitePicker() {
   return NativeInfinitePicker;
 }
 
-const WheelMonthYearPicker = (props: WheelMonthYearPickerProps) => {
+const WheelMonthYearPicker: React.FC<WheelMonthYearPickerProps> = (props) => {
   const {
     isVisible,
     initialDate,
