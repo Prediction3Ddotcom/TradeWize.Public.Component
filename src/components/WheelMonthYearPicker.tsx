@@ -172,8 +172,7 @@ const WheelMonthYearPicker: React.FC<WheelMonthYearPickerProps> = (props) => {
         });
       }
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [initialDate, minDate, maxDate, years]);
 
   // Auto-adjust month khi user chọn vượt quá minDate/maxDate
   useEffect(() => {
