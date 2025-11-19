@@ -16,6 +16,7 @@ export interface BaseContainerProps {
   statusBarStyle?: 'light-content' | 'dark-content';
   isPaddingToSafeArea?: boolean;
   backgroundStatusBarColor?: string;
+  backgroundBottomSafeAreaColor?: string;
 }
 
 const BaseContainer: React.FC<BaseContainerProps> = ({
@@ -25,6 +26,7 @@ const BaseContainer: React.FC<BaseContainerProps> = ({
   statusBarStyle = 'dark-content',
   isPaddingToSafeArea = true,
   backgroundStatusBarColor,
+  backgroundBottomSafeAreaColor,
 }) => {
   const insets = useSafeAreaInsets();
 
@@ -46,7 +48,14 @@ const BaseContainer: React.FC<BaseContainerProps> = ({
       <View style={[styles.content, style]}>
         {children}
         {isPaddingToSafeArea && (
-          <View style={{ height: getPaddingBottom(), backgroundColor }} />
+          <View
+            style={{
+              height: getPaddingBottom(),
+              backgroundColor: backgroundBottomSafeAreaColor
+                ? backgroundBottomSafeAreaColor
+                : backgroundColor,
+            }}
+          />
         )}
       </View>
     </View>

@@ -7,6 +7,7 @@ export interface BaseContainerProps {
     statusBarStyle?: 'light-content' | 'dark-content';
     isPaddingToSafeArea?: boolean;
     backgroundStatusBarColor?: string;
+    backgroundBottomSafeAreaColor?: string;
 }
 declare const BaseContainer: React.FC<BaseContainerProps>;
 export default BaseContainer;
