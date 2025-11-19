@@ -49,12 +49,15 @@ const BaseContainer: React.FC<BaseContainerProps> = ({
         {children}
         {isPaddingToSafeArea && (
           <View
-            style={{
-              height: getPaddingBottom(),
-              backgroundColor: backgroundBottomSafeAreaColor
-                ? backgroundBottomSafeAreaColor
-                : backgroundColor,
-            }}
+            style={[
+              styles.footerContainer,
+              {
+                height: getPaddingBottom(),
+                backgroundColor: backgroundBottomSafeAreaColor
+                  ? backgroundBottomSafeAreaColor
+                  : backgroundColor,
+              },
+            ]}
           />
         )}
       </View>
@@ -68,6 +71,9 @@ const styles = StyleSheet.create({
   },
   content: {
     flex: 1,
+  },
+  footerContainer: {
+    marginTop: 'auto',
   },
 });
 
