@@ -30,7 +30,7 @@ export interface WheelMonthYearPickerProps {
     wheelMonthData?: string[];
     stylePickerIosItem?: StyleProp<ViewStyle>;
     customHeader?: React.ReactNode;
-    handleSelectedDate?: (date: string) => void;
+    handleSelectedDate?: (date: Date) => void;
     onCancel?: () => void;
 }
 declare const WheelMonthYearPicker: React.FC<WheelMonthYearPickerProps>;

@@ -52,7 +52,7 @@ export interface WheelMonthYearPickerProps {
 
   customHeader?: React.ReactNode;
 
-  handleSelectedDate?: (date: string) => void;
+  handleSelectedDate?: (date: Date) => void;
   onCancel?: () => void;
 }
 
@@ -107,6 +107,14 @@ const WheelMonthYearPicker: React.FC<WheelMonthYearPickerProps> = (props) => {
     year: number;
   }>({ month: 0, year: 0 });
 
+  // Track if we're initializing from initialDate to prevent auto-adjust interference
+  const isInitializingRef = React.useRef(false);
+  // Track last initialized month/year để tránh re-initialize không cần thiết
+  const lastInitializedRef = React.useRef<{
+    month: number;
+    year: number;
+  } | null>(null);
+
   // Tính toán danh sách years dựa trên minDate và maxDate
   const years = useMemo(() => {
     const currentYear = new Date().getFullYear();
@@ -143,14 +151,30 @@ const WheelMonthYearPicker: React.FC<WheelMonthYearPickerProps> = (props) => {
           ? `0${selectedItem.month + 1}`
           : selectedItem.month + 1;
       const dateSelected = `${monthSelected}-${yearSelected}`;
-      handleSelectedDate?.(dateSelected);
+      const [month, year] = dateSelected.split('-').map(Number);
+
+      handleSelectedDate?.(new Date(Number(year), Number(month) - 1, 1));
     } catch (error) {
       console.log('handleConfirm error', error);
     }
   };
 
+  // Reset state sau khi modal đóng hoàn toàn để tránh hiệu ứng nhảy
+  const handleModalHide = useCallback(() => {
+    setSelectedItem({ month: 0, year: 0 });
+    lastInitializedRef.current = null;
+  }, []);
+
+  // Sync selectedItem với initialDate khi modal mở
+  // Sử dụng ref để track previous isVisible để chỉ khởi tạo khi modal chuyển từ đóng sang mở
+  const prevIsVisibleRef = React.useRef<boolean | undefined>(undefined);
+
   useEffect(() => {
-    if (initialDate) {
+    const wasVisible = prevIsVisibleRef.current;
+    const isNowVisible = isVisible;
+
+    // Chỉ khởi tạo khi modal chuyển từ đóng sang mở (false -> true)
+    if (isNowVisible && !wasVisible && initialDate) {
       // Validate initialDate nằm trong khoảng minDate - maxDate
       let validDate = initialDate;
 
@@ -166,16 +190,34 @@ const WheelMonthYearPicker: React.FC<WheelMonthYearPickerProps> = (props) => {
       );
 
       if (yearIndex >= 0) {
+        // Set flag để prevent auto-adjust can thiệp
+        isInitializingRef.current = true;
         setSelectedItem({
           month: monthIndex,
           year: yearIndex,
         });
+        lastInitializedRef.current = { month: monthIndex, year: yearIndex };
+        // Reset flag sau khi state đã được set
+        setTimeout(() => {
+          isInitializingRef.current = false;
+        }, 0);
       }
+    } else if (!isNowVisible && wasVisible) {
+      // Không reset state ngay khi modal đóng
+      // State sẽ được reset trong onModalHide callback sau khi modal đóng hoàn toàn
+      // để tránh hiệu ứng nhảy về default trước khi modal đóng
     }
-  }, [initialDate, minDate, maxDate, years]);
+
+    // Update ref để track state cho lần tiếp theo
+    prevIsVisibleRef.current = isNowVisible;
+  }, [isVisible, initialDate, maxDate, minDate, years]);
 
   // Auto-adjust month khi user chọn vượt quá minDate/maxDate
+  // Chỉ chạy khi user tương tác, không chạy khi đang initialize từ initialDate
   useEffect(() => {
+    // Skip nếu đang initialize hoặc modal không visible
+    if (isInitializingRef.current || !isVisible) return;
+
     const yearSelected = years[selectedItem.year];
     if (!yearSelected) return;
 
@@ -205,7 +247,14 @@ const WheelMonthYearPicker: React.FC<WheelMonthYearPickerProps> = (props) => {
     if (adjustedMonth !== null && adjustedMonth !== selectedItem.month) {
       setSelectedItem((prev) => ({ ...prev, month: adjustedMonth! }));
     }
-  }, [selectedItem.month, selectedItem.year, years, minDate, maxDate]);
+  }, [
+    selectedItem.month,
+    selectedItem.year,
+    years,
+    minDate,
+    maxDate,
+    isVisible,
+  ]);
 
   const NativePickerComponent = useMemo(() => getNativeInfinitePicker(), []);
 
@@ -300,9 +349,10 @@ const WheelMonthYearPicker: React.FC<WheelMonthYearPickerProps> = (props) => {
 
   return (
     <ReactNativeModal
-      backdropOpacity={0.2}
+      backdropOpacity={0.1}
       style={styles.modal}
       isVisible={isVisible}
+      onModalHide={handleModalHide}
     >
       <View style={styles.container}>
         {renderHeader}
