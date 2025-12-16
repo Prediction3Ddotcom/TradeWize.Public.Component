@@ -16,6 +16,7 @@ export interface HeaderBaseProps {
     backgroundColor?: string;
     border?: boolean;
     styleButtonLeft?: ViewStyle;
+    colorIconLeft?: string;
     showDefaultLeft?: boolean;
     onPressBack?: () => void;
     renderCustomContent?: () => React.ReactNode;

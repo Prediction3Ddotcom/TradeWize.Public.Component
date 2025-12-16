@@ -26,6 +26,7 @@ export interface HeaderBaseProps {
   backgroundColor?: string; // Màu nền
   border?: boolean; // Hiển thị border bottom
   styleButtonLeft?: ViewStyle;
+  colorIconLeft?: string;
   showDefaultLeft?: boolean; // Cho phép tắt default left action
   onPressBack?: () => void; // Custom hành động nút back mặc định
   renderCustomContent?: () => React.ReactNode; // Custom hoàn toàn nội dung header
@@ -43,6 +44,7 @@ const HeaderBase: React.FC<HeaderBaseProps> = ({
   border = false,
   styleButtonLeft,
   showDefaultLeft = true,
+  colorIconLeft = '#000000',
   onPressBack,
   renderCustomContent,
 }) => {
@@ -92,6 +94,7 @@ const HeaderBase: React.FC<HeaderBaseProps> = ({
           <Image
             source={require('../assets/arrow_left.png')}
             style={styles.iconLeft}
+            tintColor={colorIconLeft}
           />
         </Button>
       );
