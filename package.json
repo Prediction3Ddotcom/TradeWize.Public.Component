@@ -97,7 +97,6 @@
     "react-native-safe-area-context": "*",
     "react-native-worklets": "*"
   },
-  "packageManager": "yarn@3.6.1",
   "jest": {
     "preset": "react-native",
     "modulePathIgnorePatterns": [
@@ -181,9 +180,10 @@
     "react-native-keyboard-controller": "^1.19.1",
     "react-native-modal": "^14.0.0-rc.1",
     "react-native-permissions": "^5.4.4",
-    "react-native-reanimated": "^4.1.3",
+    "react-native-reanimated": "4.2.1",
     "react-native-safe-area-context": "^5.6.1",
     "react-native-video": "^6.18.0",
-    "react-native-worklets": "^0.6.1"
-  }
+    "react-native-worklets": "0.7.1"
+  },
+  "packageManager": "yarn@1.22.22+sha512.a6b2f7906b721bba3d67d4aff083df04dad64c399707841b7acf00f6b133b7ac24255f2652fa22ae3534329dc6180534e98d17432037ff6fd140556e2bb3137e"
 }
