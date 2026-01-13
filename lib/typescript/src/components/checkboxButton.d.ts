@@ -12,6 +12,7 @@ export interface CheckboxButtonProps extends Omit<TouchableOpacityProps, 'style'
     checkboxStyle?: StyleProp<ViewStyle>;
     spacing?: number;
     customCheckmark?: React.ReactNode;
+    styleCheckmark?: StyleProp<TextStyle>;
 }
-export declare function CheckboxButton({ label, isChecked, onChange, size, variant, isDisabled, checkboxPosition, style, textStyle, checkboxStyle, spacing, onPress, customCheckmark, ...props }: CheckboxButtonProps): import("react/jsx-runtime").JSX.Element;
+export declare function CheckboxButton({ label, isChecked, onChange, size, variant, isDisabled, checkboxPosition, style, textStyle, checkboxStyle, spacing, onPress, customCheckmark, styleCheckmark, ...props }: CheckboxButtonProps): import("react/jsx-runtime").JSX.Element;
 //# sourceMappingURL=checkboxButton.d.ts.map
