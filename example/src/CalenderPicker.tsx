@@ -162,6 +162,8 @@ export default class App extends Component {
           headerWrapperStyle={styles.headerWrapperStyle}
           selectedMonthStyle={styles.selectedMonthStyle}
           selectedMonthTextStyle={styles.selectedMonthTextStyle}
+          selectedYearStyle={styles.selectedYearStyle}
+          selectedYearTextStyle={styles.selectedYearTextStyle}
         />
 
         <View style={styles.topSpacing}>
@@ -251,6 +253,17 @@ const styles = StyleSheet.create({
     paddingHorizontal: 12,
   },
   selectedMonthTextStyle: {
+    color: '#000000',
+    fontWeight: 'bold',
+    fontSize: 16,
+  },
+  selectedYearStyle: {
+    backgroundColor: 'red',
+    borderRadius: 15,
+    paddingVertical: 8,
+    paddingHorizontal: 12,
+  },
+  selectedYearTextStyle: {
     color: '#000000',
     fontWeight: 'bold',
     fontSize: 16,

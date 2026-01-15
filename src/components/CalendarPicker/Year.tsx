@@ -17,6 +17,8 @@ export default function Year(props: any) {
     textStyle,
     minDate,
     maxDate,
+    selectedYearStyle,
+    selectedYearTextStyle,
   } = props;
 
   let yearOutOfRange;
@@ -36,6 +38,8 @@ export default function Year(props: any) {
 
   yearOutOfRange = yearIsAfterMax || yearIsBeforeMin || yearIsDisabled;
 
+  const isSelected = currentYear === year;
+
   const onSelect = () => {
     // Guard against navigating to months beyond min/max dates.
     let month = currentMonth;
@@ -50,10 +54,25 @@ export default function Year(props: any) {
   };
 
   return (
-    <View style={[styles.yearContainer]}>
+    <View
+      style={[
+        styles.yearContainer,
+        isSelected && styles.selectedYearContainer,
+        isSelected && selectedYearStyle,
+      ]}
+    >
       {!yearOutOfRange ? (
         <TouchableOpacity onPress={onSelect}>
-          <Text style={[styles.yearText, textStyle]}>{year}</Text>
+          <Text
+            style={[
+              styles.yearText,
+              textStyle,
+              isSelected && styles.selectedYearText,
+              isSelected && selectedYearTextStyle,
+            ]}
+          >
+            {year}
+          </Text>
         </TouchableOpacity>
       ) : (
         <Text style={[textStyle, styles.disabledText]}>{year}</Text>

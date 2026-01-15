@@ -264,12 +264,24 @@ export function makeStyles(params: any) {
     yearContainer: {
       flex: 1,
       alignItems: 'center',
+      paddingVertical: 5 * scaler,
+      paddingHorizontal: 10 * scaler,
+    },
+
+    selectedYearContainer: {
+      backgroundColor: SELECTED_BG_COLOR,
+      borderRadius: 20 * scaler,
     },
 
     yearText: {
       fontSize: 14 * scaler,
       color: '#000',
       alignSelf: 'center',
+    },
+
+    selectedYearText: {
+      color: SELECTED_TEXT_COLOR,
+      fontWeight: 'bold',
     },
 
     yearsHeaderText: {

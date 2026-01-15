@@ -74,6 +74,8 @@ export default class CalendarPicker extends Component<any, any> {
     selectedRangeStyle: null,
     selectedMonthStyle: null,
     selectedMonthTextStyle: null,
+    selectedYearStyle: null,
+    selectedYearTextStyle: null,
     fontScaling: true,
   };
 
@@ -641,6 +643,8 @@ export default class CalendarPicker extends Component<any, any> {
       scrollDecelarationRate,
       selectedMonthStyle,
       selectedMonthTextStyle,
+      selectedYearStyle,
+      selectedYearTextStyle,
     } = this.props as any;
 
     let content;
@@ -683,6 +687,8 @@ export default class CalendarPicker extends Component<any, any> {
             nextTitleStyle={nextTitleStyle}
             onSelectYear={this.handleOnSelectMonthYear}
             headingLevel={headingLevel}
+            selectedYearStyle={selectedYearStyle}
+            selectedYearTextStyle={selectedYearTextStyle}
           />
         );
         break;
