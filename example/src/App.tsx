@@ -5,12 +5,13 @@ import { TextExample } from './TextExample';
 import { InputExample } from './InputExample';
 import DatePickerExample from './DatePickerExample';
 import BottomSelectorExample from './BottomSelectorExample';
-import MonthYearPickerExample from './MonthYearPickerExample';
+// import MonthYearPickerExample from './MonthYearPickerExample';
 import BaseContainer from '../../src/components/baseContainer';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 import HeaderBase from '../../src/components/header';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import { KeyboardProvider } from 'react-native-keyboard-controller';
+// import CalenderPicker from './CalenderPicker';
 
 export default function App() {
   return (
@@ -26,7 +27,7 @@ export default function App() {
               <InputExample />
               <DatePickerExample />
               <BottomSelectorExample />
-              <MonthYearPickerExample />
+              {/* <MonthYearPickerExample /> */}
             </ScrollView>
           </BaseContainer>
         </SafeAreaProvider>
