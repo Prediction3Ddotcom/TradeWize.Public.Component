@@ -1,5 +1,6 @@
-import { Component } from 'react';
+import React, { Component } from 'react';
 import { View, Dimensions, Text } from 'react-native';
+import type { StyleProp, TextStyle, ViewStyle } from 'react-native';
 import { makeStyles } from './makeStyles';
 import { Utils } from './Utils';
 import HeaderControls from './HeaderControls';
@@ -19,7 +20,125 @@ import { isSameMonth } from 'date-fns/isSameMonth';
 import { startOfMonth } from 'date-fns/startOfMonth';
 import { subMonths } from 'date-fns/subMonths';
 
-export class CalendarPicker extends Component<any, any> {
+export interface CustomDateStyle {
+  date: Date | string;
+  containerStyle?: StyleProp<ViewStyle>;
+  style?: StyleProp<ViewStyle>;
+  textStyle?: StyleProp<TextStyle>;
+}
+
+export interface RangeDuration {
+  date: Date | string;
+  minDuration?: number;
+  maxDuration?: number;
+}
+
+export interface CalendarPickerProps {
+  // Date configuration
+  initialDate?: Date | string;
+  selectedStartDate?: Date | string | null;
+  selectedEndDate?: Date | string | null;
+  minDate?: Date | string | null;
+  maxDate?: Date | string | null;
+  initialView?: 'days' | 'months' | 'years';
+
+  // Disabled dates
+  disabledDates?: (Date | string)[] | ((date: Date) => boolean) | null;
+
+  // Range selection
+  allowRangeSelection?: boolean;
+  allowBackwardRangeSelect?: boolean;
+  minRangeDuration?: RangeDuration[] | number | null;
+  maxRangeDuration?: RangeDuration[] | number | null;
+
+  // Layout & dimensions
+  width?: number | null;
+  height?: number | null;
+  scaleFactor?: number;
+  horizontal?: boolean;
+
+  // Styling - colors
+  selectedDayColor?: string;
+  selectedDayTextColor?: string;
+  todayBackgroundColor?: string;
+  sundayColor?: string;
+  dayShape?: string;
+
+  // Styling - text styles
+  textStyle?: StyleProp<TextStyle>;
+  todayTextStyle?: StyleProp<TextStyle>;
+  selectedDayTextStyle?: StyleProp<TextStyle>;
+  selectedRangeStartTextStyle?: StyleProp<TextStyle>;
+  selectedRangeEndTextStyle?: StyleProp<TextStyle>;
+  disabledDatesTextStyle?: StyleProp<TextStyle>;
+  selectedDisabledDatesTextStyle?: StyleProp<TextStyle>;
+  monthTitleStyle?: StyleProp<TextStyle>;
+  yearTitleStyle?: StyleProp<TextStyle>;
+  previousTitleStyle?: StyleProp<TextStyle>;
+  nextTitleStyle?: StyleProp<TextStyle>;
+
+  // Styling - view styles
+  selectedDayStyle?: StyleProp<ViewStyle> | null;
+  selectedRangeStartStyle?: StyleProp<ViewStyle> | null;
+  selectedRangeEndStyle?: StyleProp<ViewStyle> | null;
+  selectedRangeStyle?: StyleProp<ViewStyle> | null;
+  selectedMonthStyle?: StyleProp<ViewStyle> | null;
+  selectedMonthTextStyle?: StyleProp<TextStyle> | null;
+  selectedYearStyle?: StyleProp<ViewStyle> | null;
+  selectedYearTextStyle?: StyleProp<TextStyle> | null;
+  monthYearHeaderWrapperStyle?: StyleProp<ViewStyle>;
+  headerWrapperStyle?: StyleProp<ViewStyle>;
+  dayLabelsWrapper?: StyleProp<ViewStyle>;
+  customDayHeaderStyles?:
+    | StyleProp<ViewStyle>
+    | ((params: { dayOfWeek: number; month: number; year: number }) => {
+        style?: StyleProp<ViewStyle>;
+        textStyle?: StyleProp<TextStyle>;
+      } | null);
+
+  // Custom date styles
+  customDatesStyles?:
+    | CustomDateStyle[]
+    | ((date: Date) => CustomDateStyle | null)
+    | [];
+
+  // Scrollable configuration
+  scrollable?: boolean;
+  scrollDecelerationRate?: 'normal' | 'fast';
+  scrollDecelarationRate?: 'normal' | 'fast'; // Note: typo in original prop name
+
+  // Navigation
+  restrictMonthNavigation?: boolean;
+  startFromMonday?: boolean;
+  firstDay?: number;
+  showDayStragglers?: boolean;
+
+  // Localization
+  weekdays?: string[];
+  months?: string[];
+  previousTitle?: string;
+  nextTitle?: string;
+  selectMonthTitle?: string;
+  selectYearTitle?: string;
+
+  // Custom components
+  previousComponent?: React.ReactNode;
+  nextComponent?: React.ReactNode;
+
+  // Callbacks
+  onDateChange?: (
+    date: Date | null,
+    type: typeof Utils.START_DATE | typeof Utils.END_DATE
+  ) => void;
+  onMonthChange?: (date: Date) => void;
+
+  // Other
+  enableDateChange?: boolean;
+  headingLevel?: number;
+  fontScaling?: boolean;
+}
+
+export class CalendarPicker extends Component<CalendarPickerProps, any> {
   constructor(props: any) {
     super(props);
     (this as any).numMonthsScroll = 60; // 5 years
