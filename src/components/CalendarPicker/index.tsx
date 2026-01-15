@@ -19,7 +19,7 @@ import { isSameMonth } from 'date-fns/isSameMonth';
 import { startOfMonth } from 'date-fns/startOfMonth';
 import { subMonths } from 'date-fns/subMonths';
 
-export default class CalendarPicker extends Component<any, any> {
+export class CalendarPicker extends Component<any, any> {
   constructor(props: any) {
     super(props);
     (this as any).numMonthsScroll = 60; // 5 years

@@ -191,11 +191,21 @@ export declare function makeStyles(params: any): {
     yearContainer: {
         flex: number;
         alignItems: string;
+        paddingVertical: number;
+        paddingHorizontal: number;
+    };
+    selectedYearContainer: {
+        backgroundColor: any;
+        borderRadius: number;
     };
     yearText: {
         fontSize: number;
         color: string;
         alignSelf: string;
+    };
+    selectedYearText: {
+        color: any;
+        fontWeight: string;
     };
     yearsHeaderText: {
         fontSize: number;

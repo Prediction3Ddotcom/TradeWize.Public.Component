@@ -1,5 +1,5 @@
 import { Component } from 'react';
-export default class CalendarPicker extends Component<any, any> {
+export declare class CalendarPicker extends Component<any, any> {
     constructor(props: any);
     static defaultProps: {
         initialDate: Date;
@@ -22,6 +22,8 @@ export default class CalendarPicker extends Component<any, any> {
         selectedRangeStyle: null;
         selectedMonthStyle: null;
         selectedMonthTextStyle: null;
+        selectedYearStyle: null;
+        selectedYearTextStyle: null;
         fontScaling: boolean;
     };
     componentDidUpdate(prevProps: any): void;
@@ -219,11 +221,21 @@ export default class CalendarPicker extends Component<any, any> {
             yearContainer: {
                 flex: number;
                 alignItems: string;
+                paddingVertical: number;
+                paddingHorizontal: number;
+            };
+            selectedYearContainer: {
+                backgroundColor: any;
+                borderRadius: number;
             };
             yearText: {
                 fontSize: number;
                 color: string;
                 alignSelf: string;
+            };
+            selectedYearText: {
+                color: any;
+                fontWeight: string;
             };
             yearsHeaderText: {
                 fontSize: number;
