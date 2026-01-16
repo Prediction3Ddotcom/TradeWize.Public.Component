@@ -250,7 +250,10 @@ export function BottomSelector<T = any>({
             keyExtractor={keyExtractor}
             style={[
               styles.optionsList,
-              { height: DEFAULT_MAX_HEIGHT / 2 + 25 },
+              {
+                minHeight: DEFAULT_MAX_HEIGHT / 2 + 25,
+                maxHeight: DEFAULT_MAX_HEIGHT + 25,
+              },
             ]}
             contentContainerStyle={styles.optionsListContent}
             bounces={false}
