@@ -53,7 +53,7 @@ export interface BottomSelectorProps<T = any>
   buttonCancelTextStyle?: StyleProp<TextStyle>;
 }
 
-const DEFAULT_MAX_HEIGHT = SCREEN_HEIGHT * 0.45;
+const DEFAULT_MAX_HEIGHT = SCREEN_HEIGHT * 0.7;
 
 export function BottomSelector<T = any>({
   isVisible,

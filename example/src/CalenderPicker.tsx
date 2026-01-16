@@ -12,7 +12,7 @@ import { addDays } from 'date-fns/addDays';
 import { format } from 'date-fns/format';
 import { subDays } from 'date-fns/subDays';
 
-import CalendarPicker from '../../src/components/CalendarPicker';
+import { CalendarPicker } from '../../src/components/CalendarPicker';
 
 export default class App extends Component {
   constructor(props: any) {
@@ -115,6 +115,8 @@ export default class App extends Component {
             fontWeight: 'bold',
           },
         };
+      default:
+        return null;
     }
   }
 
@@ -152,7 +154,7 @@ export default class App extends Component {
           onDateChange={(this as any).onDateChange}
           initialDate={minDate}
           customDatesStyles={customDatesStyles}
-          customDayHeaderStyles={this.customDayHeaderStylesCallback}
+          customDayHeaderStyles={(this as any).customDayHeaderStylesCallback}
           // minDate={minDate}
           // maxDate={maxDate}
           allowRangeSelection={enableRangeSelect}
