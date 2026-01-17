@@ -270,7 +270,6 @@ const WheelMonthYearPicker: React.FC<WheelMonthYearPickerProps> = (props) => {
         >
           <View style={styles.pickerItem}>
             <NativePickerComponent
-              infiniteLoop
               selectedIndex={selectedItem.month}
               style={[styles.pickerItemIos, stylePickerIosItem]}
               items={wheelMonthData}
