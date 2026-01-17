@@ -4,6 +4,7 @@ import { CheckboxButtonExample } from './CheckboxButtonExample';
 import { TextExample } from './TextExample';
 import { InputExample } from './InputExample';
 import DatePickerExample from './DatePickerExample';
+import WheelDatePickerExample from './WheelDatePickerExample';
 import BottomSelectorExample from './BottomSelectorExample';
 // import MonthYearPickerExample from './MonthYearPickerExample';
 import BaseContainer from '../../src/components/baseContainer';
@@ -26,6 +27,7 @@ export default function App() {
               <CheckboxButtonExample />
               <InputExample />
               <DatePickerExample />
+              <WheelDatePickerExample />
               <BottomSelectorExample />
               {/* <MonthYearPickerExample /> */}
             </ScrollView>

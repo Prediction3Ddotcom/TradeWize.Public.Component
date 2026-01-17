@@ -69,9 +69,9 @@ const WheelDatePicker = ({
     const formatted = `${(selectedDate.getMonth() + 1)
       .toString()
       .padStart(2, '0')}/${selectedDate
-      .getDate()
-      .toString()
-      .padStart(2, '0')}/${selectedDate.getFullYear()}`;
+        .getDate()
+        .toString()
+        .padStart(2, '0')}/${selectedDate.getFullYear()}`;
 
     setFormattedDate(formatted);
   };
@@ -113,7 +113,11 @@ const WheelDatePicker = ({
     <ReactNativeModal
       style={styles.modal}
       isVisible={isVisible}
-      onBackdropPress={() => {}}
+      onBackdropPress={() => {
+        if (cancelButtonOnPress) {
+          cancelButtonOnPress();
+        }
+      }}
       backdropOpacity={0.2}
     >
       <View style={styles.container}>
@@ -149,33 +153,27 @@ const WheelDatePicker = ({
               />
             )}
             {renderFooter}
-            <Button
-              fullWidth
-              textStyle={confirmButtonTextStyle}
-              style={[styles.confirmButton, confirmButtonStyle]}
-              title={confirmButtonText ?? 'Confirm'}
-              onPress={() => {
-                if (confirmButtonOnPress) {
-                  confirmButtonOnPress(formattedDate);
-                }
-              }}
-            />
+            <View
+              style={[styles.buttonContainer, { paddingBottom: insets.bottom }]}
+            >
+              <Button
+                textStyle={cancelButtonTextStyle}
+                style={[styles.cancelButton, cancelButtonStyle]}
+                title={cancelButtonText ?? 'Cancel'}
+                onPress={cancelButtonOnPress}
+              />
+              <Button
+                textStyle={confirmButtonTextStyle}
+                style={[styles.confirmButton, confirmButtonStyle]}
+                title={confirmButtonText ?? 'Confirm'}
+                onPress={() => {
+                  if (confirmButtonOnPress) {
+                    confirmButtonOnPress(formattedDate);
+                  }
+                }}
+              />
+            </View>
           </View>
-        </View>
-        <View
-          style={[
-            styles.footerContainer,
-            // eslint-disable-next-line react-native/no-inline-styles
-            { paddingBottom: insets.bottom > 0 ? insets.bottom : 12 },
-          ]}
-        >
-          <Button
-            fullWidth
-            textStyle={cancelButtonTextStyle}
-            style={[styles.cancelButton, cancelButtonStyle]}
-            title={cancelButtonText ?? 'Cancel'}
-            onPress={cancelButtonOnPress}
-          />
         </View>
       </View>
     </ReactNativeModal>
@@ -201,7 +199,7 @@ const styles = StyleSheet.create({
     color: 'black',
   },
   cancelButton: {
-    alignSelf: 'center',
+    flex: 1,
   },
   footerContainer: {
     alignItems: 'center',
@@ -218,9 +216,7 @@ const styles = StyleSheet.create({
     borderRadius: 16,
   },
   confirmButton: {
-    marginTop: 12,
-    borderTopLeftRadius: 0,
-    borderTopRightRadius: 0,
+    flex: 1,
   },
   helperText: {
     marginVertical: 8,
@@ -230,6 +226,14 @@ const styles = StyleSheet.create({
     lineHeight: 16,
     textAlign: 'center',
     width: '100%',
+  },
+  buttonContainer: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    width: '100%',
+    alignItems: 'center',
+    gap: 12,
+    paddingHorizontal: 12,
   },
 });
 
