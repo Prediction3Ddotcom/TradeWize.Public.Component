@@ -17,6 +17,7 @@
     "android",
     "ios",
     "cpp",
+    "assets",
     "*.podspec",
     "react-native.config.js",
     "!ios/build",

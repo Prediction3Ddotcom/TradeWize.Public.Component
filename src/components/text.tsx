@@ -3,6 +3,7 @@ import {
   type TextStyle,
   type TextProps as RNTextProps,
   type StyleProp,
+  StyleSheet,
 } from 'react-native';
 import { useColorScheme } from 'react-native';
 import type { ReactNode } from 'react';
@@ -10,26 +11,26 @@ import type { ReactNode } from 'react';
 export interface TextProps extends Omit<RNTextProps, 'style'> {
   children: ReactNode;
   variant?:
-    | 'h1'
-    | 'h2'
-    | 'h3'
-    | 'h4'
-    | 'h5'
-    | 'h6'
-    | 'body'
-    | 'bodySmall'
-    | 'caption'
-    | 'overline'
-    | 'button'
-    | 'label';
+  | 'h1'
+  | 'h2'
+  | 'h3'
+  | 'h4'
+  | 'h5'
+  | 'h6'
+  | 'body'
+  | 'bodySmall'
+  | 'caption'
+  | 'overline'
+  | 'button'
+  | 'label';
   color?:
-    | 'primary'
-    | 'secondary'
-    | 'tertiary'
-    | 'inverse'
-    | 'error'
-    | 'success'
-    | 'warning';
+  | 'primary'
+  | 'secondary'
+  | 'tertiary'
+  | 'inverse'
+  | 'error'
+  | 'success'
+  | 'warning';
   weight?: 'normal' | 'medium' | 'semibold' | 'bold';
   align?: 'left' | 'center' | 'right' | 'justify';
   numberOfLines?: number;
@@ -63,46 +64,55 @@ export function CustomText({
         fontSize: 32,
         lineHeight: 40,
         fontWeight: '700',
+        fontFamily: 'PlusJakartaSans-Bold'
       },
       h2: {
         fontSize: 28,
         lineHeight: 36,
         fontWeight: '700',
+        fontFamily: 'PlusJakartaSans-Bold'
       },
       h3: {
         fontSize: 24,
         lineHeight: 32,
         fontWeight: '600',
+        fontFamily: 'PlusJakartaSans-SemiBold'
       },
       h4: {
         fontSize: 20,
         lineHeight: 28,
         fontWeight: '600',
+        fontFamily: 'PlusJakartaSans-SemiBold'
       },
       h5: {
         fontSize: 18,
         lineHeight: 24,
         fontWeight: '600',
+        fontFamily: 'PlusJakartaSans-SemiBold'
       },
       h6: {
         fontSize: 16,
         lineHeight: 22,
         fontWeight: '600',
+        fontFamily: 'PlusJakartaSans-SemiBold'
       },
       body: {
         fontSize: 16,
         lineHeight: 24,
         fontWeight: '400',
+        fontFamily: 'PlusJakartaSans-Regular'
       },
       bodySmall: {
         fontSize: 14,
         lineHeight: 20,
         fontWeight: '400',
+        fontFamily: 'PlusJakartaSans-Regular'
       },
       caption: {
         fontSize: 12,
         lineHeight: 16,
         fontWeight: '400',
+        fontFamily: 'PlusJakartaSans-Regular'
       },
       overline: {
         fontSize: 10,
@@ -110,16 +120,19 @@ export function CustomText({
         fontWeight: '500',
         letterSpacing: 1.5,
         textTransform: 'uppercase',
+        fontFamily: 'PlusJakartaSans-SemiBold'
       },
       button: {
         fontSize: 16,
         lineHeight: 20,
         fontWeight: '600',
+        fontFamily: 'PlusJakartaSans-SemiBold'
       },
       label: {
         fontSize: 14,
         lineHeight: 18,
         fontWeight: '500',
+        fontFamily: 'PlusJakartaSans-Medium'
       },
     };
 
@@ -186,9 +199,13 @@ export function CustomText({
     };
   };
 
+  const flattenedStyle = StyleSheet.flatten(style) as TextStyle;
+  const fontWeight = flattenedStyle?.fontWeight || 'normal';
+  const fontFamily = getFontFamilyByWeight(fontWeight);
+
   return (
     <Text
-      style={[getTextStyles(), style]}
+      style={[getTextStyles(), { fontFamily }, style]}
       numberOfLines={numberOfLines}
       allowFontScaling={allowFontScaling}
       {...props}
@@ -197,3 +214,29 @@ export function CustomText({
     </Text>
   );
 }
+
+
+const getFontFamilyByWeight = (
+  fontWeight: TextStyle['fontWeight']
+): string => {
+  switch (fontWeight) {
+    case 'bold':
+    case '700':
+    case '800':
+    case '900':
+      return 'YourFont-Bold';
+
+    case '500':
+    case '600':
+    case 'medium':
+      return 'YourFont-Medium';
+
+    case 'normal':
+    case '400':
+    case '300':
+    case '200':
+    case '100':
+    default:
+      return 'YourFont-Regular';
+  }
+};
