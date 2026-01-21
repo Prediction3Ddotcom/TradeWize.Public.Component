@@ -224,12 +224,12 @@ const getFontFamilyByWeight = (
     case '700':
     case '800':
     case '900':
-      return 'YourFont-Bold';
+      return 'PlusJakartaSans-Bold';
 
     case '500':
     case '600':
     case 'medium':
-      return 'YourFont-Medium';
+      return 'PlusJakartaSans-Medium';
 
     case 'normal':
     case '400':
@@ -237,6 +237,6 @@ const getFontFamilyByWeight = (
     case '200':
     case '100':
     default:
-      return 'YourFont-Regular';
+      return 'PlusJakartaSans-Regular';
   }
 };
