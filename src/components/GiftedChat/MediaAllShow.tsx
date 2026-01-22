@@ -1,18 +1,11 @@
-import {
-  Dimensions,
-  Pressable,
-  ScrollView,
-  StyleSheet,
-  View,
-} from 'react-native';
+import { Pressable, ScrollView, StyleSheet, View } from 'react-native';
 import Modal from 'react-native-modal';
 import type { FileMessage } from './types';
 import type { IMessage } from './types';
 import Color from './Color';
 import { BlurView } from '@react-native-community/blur';
 import { MessageFile } from './MessageFile';
-const SCREEN_WIDTH = Dimensions.get('window').width;
-const SCREEN_HEIGHT = Dimensions.get('window').height;
+import { SCREEN_WIDTH, SCREEN_HEIGHT } from '../../utils';
 
 interface MediaAllShowProps {
   isVisible: boolean;

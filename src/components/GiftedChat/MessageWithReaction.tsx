@@ -29,8 +29,7 @@ import FastImage from 'react-native-fast-image';
 import { MessageText } from './MessageText';
 import { Time } from './Time';
 import { MessageFile } from './MessageFile';
-const SCREEN_HEIGHT = Dimensions.get('window').height;
-const SCREEN_WIDTH = Dimensions.get('window').width;
+import { SCREEN_HEIGHT, SCREEN_WIDTH } from '../../utils';
 export const EMOJI_REACTIONS = ['❤️', '😂', '😮', '😢', '😠', '👍'];
 
 export interface MessageWithReactionProps {

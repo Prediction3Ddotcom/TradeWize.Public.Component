@@ -1,7 +1,6 @@
 import { useEffect, useState, memo, useRef } from 'react';
 import {
   ActivityIndicator,
-  Dimensions,
   FlatList,
   StyleSheet,
   Text,
@@ -14,7 +13,7 @@ import { generateThumbnails } from './utils';
 import FastImage from 'react-native-fast-image';
 import Color from './Color';
 import { AnimatedCircularProgress } from 'react-native-circular-progress';
-const SCREEN_WIDTH = Dimensions.get('window').width;
+import { SCREEN_WIDTH } from '../../utils';
 
 const GAP_MEDIA = 3;
 

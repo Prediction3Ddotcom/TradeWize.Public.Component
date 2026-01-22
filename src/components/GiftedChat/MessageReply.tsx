@@ -3,7 +3,7 @@ import Color from './Color';
 import { type FileMessage, type IMessage } from './types';
 import { MessageFile } from './MessageFile';
 import { MessageText } from './MessageText';
-import { SCREEN_WIDTH } from 'tradewize-component';
+import { SCREEN_WIDTH } from '../../utils';
 
 interface MessageReplyProps {
   messageReply: IMessage;

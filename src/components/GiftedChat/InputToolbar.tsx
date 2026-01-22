@@ -22,7 +22,8 @@ import Color from './Color';
 import { type FileMessage, type IMessage } from './types';
 import FastImage from 'react-native-fast-image';
 import { formatDurationSmart } from './utils';
-import { Button, SCREEN_WIDTH } from 'tradewize-component';
+import { SCREEN_WIDTH } from '../../utils';
+import { Button } from '../button';
 
 export interface InputToolbarProps<TMessage extends IMessage> {
   options?: { [key: string]: () => void };
