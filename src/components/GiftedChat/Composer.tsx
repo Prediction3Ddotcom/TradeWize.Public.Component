@@ -129,11 +129,11 @@ export const Composer = forwardRef(
     };
 
     const borderRadiusByLineCount = useMemo(() => {
-      if (lineCount === 1) {
-        return 100;
-      }
+      // if (lineCount === 1) {
+      //   return 100;
+      // }
       return 16;
-    }, [lineCount]);
+    }, []);
 
     const heightInput = useMemo(() => {
       // Chiều cao mặc định cho 1 hàng

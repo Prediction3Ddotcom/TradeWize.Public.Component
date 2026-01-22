@@ -60,7 +60,7 @@ import { MessageWithReaction } from '../MessageWithReaction';
 import { MediaAllShow } from '../MediaAllShow';
 import { generateThumbnails, normalizeFileUri } from '../utils';
 import ImageCropPicker from 'react-native-image-crop-picker';
-import { VideoModal } from '../VideoPlayer/VideoModal';
+import { VideoModal } from '../../VideoModal';
 import { CameraModal } from '../Camera';
 // import ImageDrawingCanvas from '../../ImageDrawingCanvas';
 
