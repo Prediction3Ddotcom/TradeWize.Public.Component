@@ -34,6 +34,8 @@ export { VideoModal } from './components/VideoModal';
 export type { VideoModalProps } from './components/VideoModal';
 export { CalendarPicker } from './components/CalendarPicker';
 
+export * from './components/GiftedChat';
+
 export { useKeyboardHeight } from './hooks/useKeyboardHeight';
 
 export {

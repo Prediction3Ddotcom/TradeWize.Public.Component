@@ -24,6 +24,7 @@ export type { HeaderBaseProps } from './components/header';
 export { VideoModal } from './components/VideoModal';
 export type { VideoModalProps } from './components/VideoModal';
 export { CalendarPicker } from './components/CalendarPicker';
+export * from './components/GiftedChat';
 export { useKeyboardHeight } from './hooks/useKeyboardHeight';
 export { scaleSize, BASE_WIDTH, BASE_HEIGHT, SCREEN_WIDTH, SCREEN_HEIGHT, } from './utils';
 //# sourceMappingURL=index.d.ts.map
