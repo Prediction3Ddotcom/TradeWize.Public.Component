@@ -55,7 +55,6 @@ export const Composer = forwardRef(
       placeholderTextColor = Color.defaultColor,
       textInputAutoFocus = false,
       text,
-      textInputProps,
       textInputStyle,
       onPressPickMedia,
       onFocus,
@@ -132,7 +131,7 @@ export const Composer = forwardRef(
       // if (lineCount === 1) {
       //   return 100;
       // }
-      return 16;
+      return 12;
     }, []);
 
     const heightInput = useMemo(() => {
@@ -213,7 +212,7 @@ export const Composer = forwardRef(
             multiline={multiline}
             editable={!disableComposer}
             onContentSizeChange={handleContentSizeChange}
-            onChangeText={(txt) => {
+            onChangeText={(txt: string) => {
               onTextChanged?.(txt);
               setIsPickerOpen(false);
             }}
@@ -246,7 +245,6 @@ export const Composer = forwardRef(
               setIsPickerOpen(false);
               onBlur?.();
             }}
-            {...textInputProps}
           />
 
           <Text
