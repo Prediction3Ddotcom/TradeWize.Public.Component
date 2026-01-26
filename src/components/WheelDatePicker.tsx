@@ -16,7 +16,6 @@ import { SCREEN_HEIGHT } from '../utils';
 import { CustomText } from './text';
 import { Button } from './button';
 import { useMemo, useState } from 'react';
-
 export interface WheelDatePickerProps {
   initialDate: Date;
   isVisible: boolean;
@@ -37,6 +36,7 @@ export interface WheelDatePickerProps {
   cancelButtonOnPress?: () => void;
   contentStyle?: StyleProp<ViewStyle>;
   titleStyle?: StyleProp<TextStyle>;
+  theme?: 'light' | 'dark';
 }
 
 const WheelDatePicker = ({
@@ -59,6 +59,7 @@ const WheelDatePicker = ({
   minDate,
   customHeader,
   customFooter,
+  theme = 'light',
 }: WheelDatePickerProps) => {
   const insets = useSafeAreaInsets();
 
@@ -126,6 +127,7 @@ const WheelDatePicker = ({
             {renderHeader}
             {Platform.OS === 'ios' ? (
               <DateTimePickerIOS
+                themeVariant={theme}
                 value={initialDate}
                 maximumDate={maxDate}
                 minimumDate={minDate}
@@ -141,6 +143,7 @@ const WheelDatePicker = ({
               />
             ) : (
               <DateTimePickerAndroid
+                theme={theme}
                 maximumDate={maxDate}
                 minimumDate={minDate}
                 mode="date"

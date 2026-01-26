@@ -3002,9 +3002,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@react-native-community/datetimepicker@npm:^8.5.0":
-  version: 8.5.0
-  resolution: "@react-native-community/datetimepicker@npm:8.5.0"
+"@react-native-community/datetimepicker@npm:8.4.4":
+  version: 8.4.4
+  resolution: "@react-native-community/datetimepicker@npm:8.4.4"
   dependencies:
     invariant: ^2.2.4
   peerDependencies:
@@ -3017,7 +3017,7 @@ __metadata:
       optional: true
     react-native-windows:
       optional: true
-  checksum: 0359355e241061611bce46e4a355f20b046826b97723f439f6bd120f564ae344d8a79d0b866bc56b2ff61e4e0a8efa7a2eee40d75a628fe8399cba7d0a4759b8
+  checksum: 659a19ec6ea6ec7538519411c60ff8eeae330b40248e28a38b540e5d8f758859f6a0fa8e9e39efbafbc6d44b57e3f68cb972b5fd4abb9a173651ca09a1ff28e5
   languageName: node
   linkType: hard
 
@@ -10455,13 +10455,13 @@ __metadata:
   languageName: node
   linkType: hard
 
-"react-native-date-picker@npm:5.0.12":
-  version: 5.0.12
-  resolution: "react-native-date-picker@npm:5.0.12"
+"react-native-date-picker@npm:^5.0.13":
+  version: 5.0.13
+  resolution: "react-native-date-picker@npm:5.0.13"
   peerDependencies:
     react: ">= 17.0.1"
     react-native: ">= 0.64.3"
-  checksum: 61741202fe1c97d784e1b0d0ef13d2f1c4c1859be3447b49feff9ccfa810567f0034d3e8b2981d613753c5fc4e6612e855f1037a8ece03f13cbb3ad96ed74ba7
+  checksum: 80a97687571d25cee8b40a9e1d471ccb303cd152d2db2edbc735b3280747e40f42ea626437d81bd5abeced7ed815414195929074295d54c0da54fc7da6e1011e
   languageName: node
   linkType: hard
 
@@ -11979,7 +11979,7 @@ __metadata:
     "@hortau/react-native-wheel-picker-android": "git+https://github.com/thanhthai198/ReactNativeWheelPicker.git"
     "@react-native-community/blur": ^4.4.1
     "@react-native-community/cli": 20.0.1
-    "@react-native-community/datetimepicker": ^8.5.0
+    "@react-native-community/datetimepicker": 8.4.4
     "@react-native-community/slider": ^5.1.1
     "@react-native-picker/picker": ^2.11.4
     "@react-native/babel-preset": 0.81.1
@@ -12007,7 +12007,7 @@ __metadata:
     react-native-calendars: ^1.1313.0
     react-native-circular-progress: ^1.4.1
     react-native-create-thumbnail: ^2.2.0
-    react-native-date-picker: 5.0.12
+    react-native-date-picker: ^5.0.13
     react-native-fast-image: ^8.6.3
     react-native-fast-shadow: ^0.1.1
     react-native-fs: ^2.20.0

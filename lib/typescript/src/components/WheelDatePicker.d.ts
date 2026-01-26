@@ -19,7 +19,8 @@ export interface WheelDatePickerProps {
     cancelButtonOnPress?: () => void;
     contentStyle?: StyleProp<ViewStyle>;
     titleStyle?: StyleProp<TextStyle>;
+    theme?: 'light' | 'dark';
 }
-declare const WheelDatePicker: ({ initialDate, isVisible, title, helperText, helperTextStyle, confirmButtonText, confirmButtonTextStyle, confirmButtonStyle, confirmButtonOnPress, cancelButtonText, cancelButtonTextStyle, cancelButtonStyle, cancelButtonOnPress, contentStyle, titleStyle, maxDate, minDate, customHeader, customFooter, }: WheelDatePickerProps) => import("react/jsx-runtime").JSX.Element;
+declare const WheelDatePicker: ({ initialDate, isVisible, title, helperText, helperTextStyle, confirmButtonText, confirmButtonTextStyle, confirmButtonStyle, confirmButtonOnPress, cancelButtonText, cancelButtonTextStyle, cancelButtonStyle, cancelButtonOnPress, contentStyle, titleStyle, maxDate, minDate, customHeader, customFooter, theme, }: WheelDatePickerProps) => import("react/jsx-runtime").JSX.Element;
 export default WheelDatePicker;
 //# sourceMappingURL=WheelDatePicker.d.ts.map
