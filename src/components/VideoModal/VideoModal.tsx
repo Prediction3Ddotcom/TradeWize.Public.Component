@@ -248,9 +248,10 @@ export const VideoModal: React.FC<VideoModalProps> = ({
     }
   }, [isSubtitle, loadFileSubtitle]);
 
-  // Reset button opacity when modal opens
+  // Reset state when modal opens
   useEffect(() => {
     if (visible) {
+      resetState();
       // If autoPlay is true, button should be dimmed initially
       const initialOpacity = autoPlay ? 0.3 : 1;
       Animated.timing(buttonOpacity, {
@@ -259,7 +260,7 @@ export const VideoModal: React.FC<VideoModalProps> = ({
         useNativeDriver: true,
       }).start();
     }
-  }, [visible, buttonOpacity, autoPlay]);
+  }, [visible, buttonOpacity, autoPlay, resetState]);
 
   useEffect(() => {
     if (initialSubtitle) {
@@ -436,6 +437,7 @@ export const VideoModal: React.FC<VideoModalProps> = ({
             <View style={[styles.progressContainer, { bottom: insets.bottom }]}>
               <View style={styles.progressBar}>
                 <Slider
+                  key={`slider-${visible}`}
                   style={styles.slider}
                   value={progress}
                   minimumValue={0}
