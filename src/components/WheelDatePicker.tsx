@@ -69,9 +69,9 @@ const WheelDatePicker = ({
     const formatted = `${(selectedDate.getMonth() + 1)
       .toString()
       .padStart(2, '0')}/${selectedDate
-        .getDate()
-        .toString()
-        .padStart(2, '0')}/${selectedDate.getFullYear()}`;
+      .getDate()
+      .toString()
+      .padStart(2, '0')}/${selectedDate.getFullYear()}`;
 
     setFormattedDate(formatted);
   };
@@ -213,7 +213,8 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     backgroundColor: 'white',
-    borderRadius: 16,
+    borderTopRightRadius: 16,
+    borderTopLeftRadius: 16,
   },
   confirmButton: {
     flex: 1,
