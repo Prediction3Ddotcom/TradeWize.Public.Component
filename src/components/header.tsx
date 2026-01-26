@@ -92,7 +92,7 @@ const HeaderBase: React.FC<HeaderBaseProps> = ({
           hitSlop={{ top: 10, bottom: 10, left: 10, right: 10 }}
         >
           <Image
-            source={require('../assets/arrow_left.png')}
+            source={require('../assets/back.png')}
             style={styles.iconLeft}
             tintColor={colorIconLeft}
           />

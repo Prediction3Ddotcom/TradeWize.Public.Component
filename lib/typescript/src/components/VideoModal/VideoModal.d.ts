@@ -22,6 +22,7 @@ export interface VideoModalProps {
     initialSubtitle?: string;
     isProgressBar?: boolean;
     refreshOnSubtitleChange?: boolean;
+    isControlsMuted?: boolean;
     onError?: (error: any, loading: boolean) => void;
     onLoad?: (loading: boolean) => void;
     onEnd?: () => void;
