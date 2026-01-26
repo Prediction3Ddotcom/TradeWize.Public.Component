@@ -25,6 +25,7 @@ export interface CheckboxButtonProps
   spacing?: number;
   customCheckmark?: React.ReactNode;
   styleCheckmark?: StyleProp<TextStyle>;
+  numberLineLabel?: number;
 }
 
 export function CheckboxButton({
@@ -42,6 +43,7 @@ export function CheckboxButton({
   onPress,
   customCheckmark,
   styleCheckmark,
+  numberLineLabel = 1,
   ...props
 }: CheckboxButtonProps) {
   const colorScheme = useColorScheme();
@@ -210,7 +212,12 @@ export function CheckboxButton({
     if (!label) return null;
 
     return (
-      <CustomText style={[getTextStyles(), textStyle]}>{label}</CustomText>
+      <CustomText
+        numberOfLines={numberLineLabel}
+        style={[getTextStyles(), textStyle]}
+      >
+        {label}
+      </CustomText>
     );
   };
 
