@@ -359,16 +359,6 @@ const WheelMonthYearPicker: React.FC<WheelMonthYearPickerProps> = (props) => {
         {renderWheelPickerByPlatform}
         <View style={styles.footerContainerWithPadding}>
           <Button
-            textStyle={styleTextConfirm}
-            title={textConfirm || 'Confirm'}
-            style={[
-              styles.buttonFooter,
-              styles.buttonConfirm,
-              styleButtonConfirm,
-            ]}
-            onPress={handleConfirm}
-          />
-          <Button
             textStyle={[styles.buttonTextCancel, styleTextCancel]}
             title={textCancel || 'Cancel'}
             style={[
@@ -378,6 +368,16 @@ const WheelMonthYearPicker: React.FC<WheelMonthYearPickerProps> = (props) => {
             ]}
             variant="secondary"
             onPress={onCancel}
+          />
+          <Button
+            textStyle={styleTextConfirm}
+            title={textConfirm || 'Confirm'}
+            style={[
+              styles.buttonFooter,
+              styles.buttonConfirm,
+              styleButtonConfirm,
+            ]}
+            onPress={handleConfirm}
           />
         </View>
       </View>
