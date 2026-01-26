@@ -357,20 +357,29 @@ const WheelMonthYearPicker: React.FC<WheelMonthYearPickerProps> = (props) => {
         {renderHeader}
 
         {renderWheelPickerByPlatform}
-        <Button
-          textStyle={styleTextConfirm}
-          title={textConfirm || 'Confirm'}
-          style={[styles.buttonConfirm, styleButtonConfirm]}
-          onPress={handleConfirm}
-        />
-      </View>
-      <View style={styles.footerContainerWithPadding}>
-        <Button
-          textStyle={styleTextCancel}
-          title={textCancel || 'Cancel'}
-          style={[styles.buttonCancel, styleButtonCancel]}
-          onPress={onCancel}
-        />
+        <View style={styles.footerContainerWithPadding}>
+          <Button
+            textStyle={styleTextConfirm}
+            title={textConfirm || 'Confirm'}
+            style={[
+              styles.buttonFooter,
+              styles.buttonConfirm,
+              styleButtonConfirm,
+            ]}
+            onPress={handleConfirm}
+          />
+          <Button
+            textStyle={[styles.buttonTextCancel, styleTextCancel]}
+            title={textCancel || 'Cancel'}
+            style={[
+              styles.buttonFooter,
+              styles.buttonCancel,
+              styleButtonCancel,
+            ]}
+            variant="secondary"
+            onPress={onCancel}
+          />
+        </View>
       </View>
     </ReactNativeModal>
   );
@@ -385,7 +394,6 @@ const styles = StyleSheet.create({
     justifyContent: 'flex-end',
     borderBottomRightRadius: 12,
     borderBottomLeftRadius: 12,
-    paddingHorizontal: 8,
   },
   pickerContainer: {
     backgroundColor: 'white',
@@ -412,20 +420,24 @@ const styles = StyleSheet.create({
     borderTopRightRadius: 12,
     borderTopLeftRadius: 12,
   },
-  buttonConfirm: {
-    borderTopRightRadius: 0,
-    borderTopLeftRadius: 0,
-  },
-  buttonCancel: {
-    marginTop: 12,
-  },
-  footerContainer: {
-    paddingHorizontal: 8,
-    paddingBottom: 12,
+  buttonFooter: {
+    flex: 1,
   },
   footerContainerWithPadding: {
     paddingHorizontal: 8,
     paddingBottom: 24,
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    gap: 12,
+    backgroundColor: 'white',
+  },
+  buttonConfirm: {},
+  buttonCancel: {
+    backgroundColor: 'white',
+  },
+  buttonTextCancel: {
+    color: 'black',
   },
 });
 

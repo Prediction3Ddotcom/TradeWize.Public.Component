@@ -117,11 +117,22 @@ class InfinitePickerView: UIView, UIPickerViewDelegate, UIPickerViewDataSource {
     
     // ✅ Optional: Custom styling
     func pickerView(_ pickerView: UIPickerView, viewForRow row: Int, forComponent component: Int, reusing view: UIView?) -> UIView {
-        let label = (view as? UILabel) ?? UILabel()
+        let label: UILabel
+        if let reusedLabel = view as? UILabel {
+            label = reusedLabel
+        } else {
+            label = UILabel()
+            label.textAlignment = .center
+            label.font = UIFont.systemFont(ofSize: 20)
+            label.textColor = UIColor.black // Màu đen mặc định cho text
+        }
+        
+        guard !items.isEmpty else {
+            label.text = ""
+            return label
+        }
         
         label.text = items[row % items.count]
-        label.textAlignment = .center
-        label.font = UIFont.systemFont(ofSize: 20)
         
         return label
     }
