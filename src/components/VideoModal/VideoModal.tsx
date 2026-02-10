@@ -97,8 +97,8 @@ export const VideoModal: React.FC<VideoModalProps> = ({
   const [error, setError] = useState<boolean>(false);
   const [currentSubtitleLanguage, setCurrentSubtitleLanguage] =
     useState<string>(initialSubtitle);
-  // const [showLanguageSelector, setShowLanguageSelector] =
-  //   useState<boolean>(false);
+  const [showLanguageSelector, setShowLanguageSelector] =
+    useState<boolean>(false);
   const [showRateSelector, setShowRateSelector] = useState<boolean>(false);
   const [rate, setRate] = useState<number>(1.0);
   const [isMuted, setIsMuted] = useState<boolean>(muted);
@@ -214,22 +214,22 @@ export const VideoModal: React.FC<VideoModalProps> = ({
     );
   }, [source, currentSubtitleLanguage, initialSubtitle]);
 
-  // const changeSubtitleLanguage = useCallback(
-  //   async (language: string) => {
-  //     setCurrentSubtitleLanguage(language);
-  //     setCurrentSubtitle(''); // Clear current subtitle when changing language
-  //     setSubtitleLoaded(false);
-  //     // Reset video state to refresh component only if refreshOnSubtitleChange is true
-  //     if (refreshOnSubtitleChange) {
-  //       setProgress(0);
-  //       setCurrentTime(0);
-  //       setDuration(0);
-  //       setSubtitles([]);
-  //     }
-  //     await loadFileSubtitle(language);
-  //   },
-  //   [loadFileSubtitle, refreshOnSubtitleChange]
-  // );
+  const changeSubtitleLanguage = useCallback(
+    async (language: string) => {
+      setCurrentSubtitleLanguage(language);
+      setCurrentSubtitle(''); // Clear current subtitle when changing language
+      setSubtitleLoaded(false);
+      // Reset video state to refresh component only if refreshOnSubtitleChange is true
+      if (refreshOnSubtitleChange) {
+        setProgress(0);
+        setCurrentTime(0);
+        setDuration(0);
+        setSubtitles([]);
+      }
+      await loadFileSubtitle(language);
+    },
+    [loadFileSubtitle, refreshOnSubtitleChange]
+  );
 
   const changeRate = useCallback(
     (rateVideo: number) => {
@@ -239,7 +239,7 @@ export const VideoModal: React.FC<VideoModalProps> = ({
   );
 
   // Get available subtitle languages
-  // const availableLanguages = Object.keys(subtitle) as string[];
+  const availableLanguages = Object.keys(subtitle) as string[];
 
   useEffect(() => {
     if (isSubtitle) {
@@ -321,7 +321,7 @@ export const VideoModal: React.FC<VideoModalProps> = ({
           )}
 
           {/* Language Selector */}
-          {/* {isSubtitle && availableLanguages.length > 1 && !error && (
+          {isSubtitle && availableLanguages.length > 1 && !error && (
             <View
               style={[
                 styles.languageContainer,
@@ -367,7 +367,7 @@ export const VideoModal: React.FC<VideoModalProps> = ({
                 </View>
               )}
             </View>
-          )} */}
+          )}
 
           {isRateControl && (
             <View
