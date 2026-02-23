@@ -292,7 +292,6 @@ export function makeStyles(params: any) {
     },
 
     yearsWrapper: {
-      flex: 1,
       alignSelf: 'center',
       justifyContent: 'center',
       width: containerWidth,
@@ -300,8 +299,7 @@ export function makeStyles(params: any) {
 
     yearsRow: {
       flexDirection: 'row',
-      paddingVertical: 8 * scaler,
-      paddingHorizontal: 16 * scaler,
+      padding: 20 * scaler,
     },
   };
 }
