@@ -1,14 +1,31 @@
 import { View, Text, Platform } from 'react-native';
-import PropTypes from 'prop-types';
-import { stylePropType } from './localPropTypes';
 import Controls from './Controls';
 
 import { getYear } from 'date-fns/getYear';
 
-export default function YearsHeader(props: any) {
+interface YearsHeaderProps {
+  styles: any;
+  textStyle: any;
+  headingLevel: number;
+  startYear: number;
+  endYear: number;
+  minDate: Date | null;
+  maxDate: Date | null;
+  restrictNavigation: boolean;
+  previousComponent: React.ReactNode;
+  nextComponent: React.ReactNode;
+  previousTitle: string;
+  nextTitle: string;
+  previousTitleStyle: any;
+  nextTitleStyle: any;
+  onYearViewPrevious: () => void;
+  onYearViewNext: () => void;
+}
+
+export default function YearsHeader(props: YearsHeaderProps) {
   const {
-    title,
-    year,
+    startYear,
+    endYear,
     maxDate,
     minDate,
     restrictNavigation,
@@ -25,9 +42,16 @@ export default function YearsHeader(props: any) {
     headingLevel,
   } = props;
 
-  const disablePrevious =
-    restrictNavigation && minDate && getYear(minDate) >= year;
-  const disableNext = restrictNavigation && maxDate && getYear(maxDate) <= year;
+  const disablePrevious = !!(
+    restrictNavigation &&
+    minDate &&
+    getYear(minDate) >= startYear
+  );
+  const disableNext = !!(
+    restrictNavigation &&
+    maxDate &&
+    getYear(maxDate) <= endYear
+  );
 
   const accessibilityProps: any = { accessibilityRole: 'header' };
   if (Platform.OS === 'web') {
@@ -45,7 +69,7 @@ export default function YearsHeader(props: any) {
         textStyles={[styles.navButtonText, textStyle, previousTitleStyle]}
       />
       <Text style={[styles.yearsHeaderText, textStyle]} {...accessibilityProps}>
-        {title}
+        {`${startYear} – ${endYear}`}
       </Text>
       <Controls
         disabled={disableNext}
@@ -58,11 +82,3 @@ export default function YearsHeader(props: any) {
     </View>
   );
 }
-
-YearsHeader.propTypes = {
-  styles: stylePropType,
-  textStyle: stylePropType,
-  title: PropTypes.string,
-  onYearViewNext: PropTypes.func,
-  onYearViewPrevious: PropTypes.func,
-};

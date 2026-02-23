@@ -1,13 +1,21 @@
-import PropTypes from 'prop-types';
-declare function YearsHeader(props: any): import("react/jsx-runtime").JSX.Element;
-declare namespace YearsHeader {
-    var propTypes: {
-        styles: PropTypes.Requireable<any>;
-        textStyle: PropTypes.Requireable<any>;
-        title: PropTypes.Requireable<string>;
-        onYearViewNext: PropTypes.Requireable<(...args: any[]) => any>;
-        onYearViewPrevious: PropTypes.Requireable<(...args: any[]) => any>;
-    };
+interface YearsHeaderProps {
+    styles: any;
+    textStyle: any;
+    headingLevel: number;
+    startYear: number;
+    endYear: number;
+    minDate: Date | null;
+    maxDate: Date | null;
+    restrictNavigation: boolean;
+    previousComponent: React.ReactNode;
+    nextComponent: React.ReactNode;
+    previousTitle: string;
+    nextTitle: string;
+    previousTitleStyle: any;
+    nextTitleStyle: any;
+    onYearViewPrevious: () => void;
+    onYearViewNext: () => void;
 }
-export default YearsHeader;
+export default function YearsHeader(props: YearsHeaderProps): import("react/jsx-runtime").JSX.Element;
+export {};
 //# sourceMappingURL=YearsHeader.d.ts.map

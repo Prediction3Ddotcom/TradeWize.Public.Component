@@ -330,13 +330,15 @@ export declare class CalendarPicker extends Component<CalendarPickerProps, any> 
                 textAlign: string;
             };
             yearsWrapper: {
+                flex: number;
                 alignSelf: string;
                 justifyContent: string;
                 width: any;
             };
             yearsRow: {
                 flexDirection: string;
-                padding: number;
+                paddingVertical: number;
+                paddingHorizontal: number;
             };
         };
     };

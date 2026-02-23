@@ -1,79 +1,121 @@
-// Parent view for Year selector
+// Parent view for Year selector — paginated (12 years per page)
 
-import { Component } from 'react';
-import { View } from 'react-native';
+import React, { useCallback, useRef, useMemo } from 'react';
+import { View, FlatList, Dimensions } from 'react-native';
 import YearsGridView from './YearsGridView';
 import YearsHeader from './YearsHeader';
 
-export default class YearSelector extends Component<any, any> {
-  constructor(props: any) {
-    super(props);
-    this.state = {
-      initialYear: props.currentYear,
-    };
-  }
+const YEARS_PER_PAGE = 12;
+const TOTAL_PAGES = 20; // 10 pages before current, 10 after → covers 240 years
+const HALF_PAGES = Math.floor(TOTAL_PAGES / 2);
 
-  handleOnYearViewPrevious = () => {
-    this.setState({
-      initialYear: parseInt(
-        Math.max((this.state as any).initialYear - 25, 0).toString(),
-        10
-      ),
+interface YearSelectorProps {
+  styles: any;
+  textStyle: any;
+  title: string;
+  initialDate: Date;
+  currentMonth: number;
+  currentYear: number;
+  minDate: Date | null;
+  maxDate: Date | null;
+  restrictNavigation: boolean;
+  previousComponent: React.ReactNode;
+  nextComponent: React.ReactNode;
+  previousTitle: string;
+  nextTitle: string;
+  previousTitleStyle: any;
+  nextTitleStyle: any;
+  onSelectYear: (params: { month: number; year: number }) => void;
+  headingLevel: number;
+  selectedYearStyle: any;
+  selectedYearTextStyle: any;
+}
+
+export default function YearSelector(props: YearSelectorProps) {
+  const {
+    styles,
+    textStyle,
+    currentMonth,
+    currentYear,
+    minDate,
+    maxDate,
+    restrictNavigation,
+    previousComponent,
+    nextComponent,
+    previousTitle,
+    nextTitle,
+    previousTitleStyle,
+    nextTitleStyle,
+    onSelectYear,
+    headingLevel,
+    selectedYearStyle,
+    selectedYearTextStyle,
+  } = props;
+
+  const flatListRef = useRef<FlatList>(null);
+  const currentPageIndex = useRef(HALF_PAGES);
+
+  // Compute page width from styles or screen
+  const pageWidth = styles.containerWidth || Dimensions.get('window').width;
+
+  // Build the list of pages. Each page is defined by its starting year.
+  // The "center" page contains the currentYear.
+  const pages = useMemo(() => {
+    // The center page's start year is aligned to a multiple of YEARS_PER_PAGE
+    const centerStart =
+      Math.floor(currentYear / YEARS_PER_PAGE) * YEARS_PER_PAGE;
+    return Array.from({ length: TOTAL_PAGES }, (_, i) => {
+      const offset = i - HALF_PAGES;
+      return centerStart + offset * YEARS_PER_PAGE;
     });
-  };
+  }, [currentYear]);
 
-  handleOnYearViewNext = () => {
-    this.setState({
-      initialYear: parseInt((this.state as any).initialYear + 25, 10),
-    });
-  };
+  // Derive the visible page info for header
+  const [visiblePageIdx, setVisiblePageIdx] = React.useState(HALF_PAGES);
+  const visibleStartYear = pages[visiblePageIdx] ?? pages[HALF_PAGES]!;
+  const visibleEndYear = visibleStartYear + YEARS_PER_PAGE - 1;
 
-  render() {
-    const {
-      styles,
-      textStyle,
-      title,
-      initialDate,
-      currentMonth,
-      currentYear,
-      minDate,
-      maxDate,
-      restrictNavigation,
-      previousComponent,
-      nextComponent,
-      previousTitle,
-      nextTitle,
-      previousTitleStyle,
-      nextTitleStyle,
-      headingLevel,
-      onSelectYear,
-      selectedYearStyle,
-      selectedYearTextStyle,
-    } = this.props as any;
+  const onViewableItemsChanged = useRef(
+    ({ viewableItems }: { viewableItems: any[] }) => {
+      if (viewableItems.length > 0) {
+        const idx = viewableItems[0].index;
+        if (typeof idx === 'number') {
+          setVisiblePageIdx(idx);
+          currentPageIndex.current = idx;
+        }
+      }
+    }
+  ).current;
 
-    return (
-      <View style={styles.calendar}>
-        <YearsHeader
-          styles={styles}
-          textStyle={textStyle}
-          title={title}
-          headingLevel={headingLevel}
-          initialDate={initialDate}
-          minDate={minDate}
-          maxDate={maxDate}
-          restrictNavigation={restrictNavigation}
-          year={(this.state as any).initialYear}
-          previousComponent={previousComponent}
-          nextComponent={nextComponent}
-          previousTitle={previousTitle}
-          nextTitle={nextTitle}
-          previousTitleStyle={previousTitleStyle}
-          nextTitleStyle={nextTitleStyle}
-          onYearViewPrevious={this.handleOnYearViewPrevious}
-          onYearViewNext={this.handleOnYearViewNext}
-        />
+  const viewabilityConfig = useRef({
+    viewAreaCoveragePercentThreshold: 50,
+  }).current;
+
+  const handlePrevious = useCallback(() => {
+    const nextIdx = Math.max(currentPageIndex.current - 1, 0);
+    flatListRef.current?.scrollToIndex({ index: nextIdx, animated: true });
+  }, []);
+
+  const handleNext = useCallback(() => {
+    const nextIdx = Math.min(currentPageIndex.current + 1, TOTAL_PAGES - 1);
+    flatListRef.current?.scrollToIndex({ index: nextIdx, animated: true });
+  }, []);
+
+  const getItemLayout = useCallback(
+    (_data: any, index: number) => ({
+      length: pageWidth,
+      offset: pageWidth * index,
+      index,
+    }),
+    [pageWidth]
+  );
+
+  const renderPage = useCallback(
+    ({ item: startYear }: { item: number }) => (
+      <View style={{ width: pageWidth }}>
         <YearsGridView
-          intialYear={(this.state as any).initialYear}
+          startYear={startYear}
+          yearsPerPage={YEARS_PER_PAGE}
           currentMonth={currentMonth}
           currentYear={currentYear}
           styles={styles}
@@ -85,6 +127,56 @@ export default class YearSelector extends Component<any, any> {
           selectedYearTextStyle={selectedYearTextStyle}
         />
       </View>
-    );
-  }
+    ),
+    [
+      pageWidth,
+      currentMonth,
+      currentYear,
+      styles,
+      onSelectYear,
+      minDate,
+      maxDate,
+      textStyle,
+      selectedYearStyle,
+      selectedYearTextStyle,
+    ]
+  );
+
+  const keyExtractor = useCallback((item: number) => `year-page-${item}`, []);
+
+  return (
+    <View style={styles.calendar}>
+      <YearsHeader
+        styles={styles}
+        textStyle={textStyle}
+        headingLevel={headingLevel}
+        startYear={visibleStartYear}
+        endYear={visibleEndYear}
+        minDate={minDate}
+        maxDate={maxDate}
+        restrictNavigation={restrictNavigation}
+        previousComponent={previousComponent}
+        nextComponent={nextComponent}
+        previousTitle={previousTitle}
+        nextTitle={nextTitle}
+        previousTitleStyle={previousTitleStyle}
+        nextTitleStyle={nextTitleStyle}
+        onYearViewPrevious={handlePrevious}
+        onYearViewNext={handleNext}
+      />
+      <FlatList
+        ref={flatListRef}
+        data={pages}
+        horizontal
+        pagingEnabled
+        showsHorizontalScrollIndicator={false}
+        initialScrollIndex={HALF_PAGES}
+        getItemLayout={getItemLayout}
+        renderItem={renderPage}
+        keyExtractor={keyExtractor}
+        onViewableItemsChanged={onViewableItemsChanged}
+        viewabilityConfig={viewabilityConfig}
+      />
+    </View>
+  );
 }

@@ -1,10 +1,24 @@
 import { View } from 'react-native';
-import PropTypes from 'prop-types';
 import Year from './Year';
 
-export default function YearsGridView(props: any) {
+interface YearsGridViewProps {
+  startYear: number;
+  yearsPerPage: number;
+  currentMonth: number;
+  currentYear: number;
+  styles: any;
+  onSelectYear: (params: { month: number; year: number }) => void;
+  textStyle: any;
+  minDate: Date | null;
+  maxDate: Date | null;
+  selectedYearStyle: any;
+  selectedYearTextStyle: any;
+}
+
+export default function YearsGridView(props: YearsGridViewProps) {
   const {
-    intialYear,
+    startYear,
+    yearsPerPage,
     currentMonth,
     currentYear,
     styles,
@@ -15,43 +29,44 @@ export default function YearsGridView(props: any) {
     selectedYearStyle,
     selectedYearTextStyle,
   } = props;
-  const guideArray = [0, 1, 2, 3, 4];
-  let year = intialYear - 13; // center current year in grid
 
-  function generateColumns() {
-    const column = guideArray.map(() => {
-      year++;
-      return (
-        <Year
-          key={year}
-          year={year}
-          currentMonth={currentMonth}
-          currentYear={currentYear}
-          styles={styles}
-          onSelectYear={onSelectYear}
-          minDate={minDate}
-          maxDate={maxDate}
-          textStyle={textStyle}
-          selectedYearStyle={selectedYearStyle}
-          selectedYearTextStyle={selectedYearTextStyle}
-        />
-      );
-    });
-    return column;
+  const columns = 3;
+  const rows = Math.ceil(yearsPerPage / columns);
+
+  const grid: number[][] = [];
+  let year = startYear;
+  for (let r = 0; r < rows; r++) {
+    const row: number[] = [];
+    for (let c = 0; c < columns; c++) {
+      if (year < startYear + yearsPerPage) {
+        row.push(year);
+        year++;
+      }
+    }
+    grid.push(row);
   }
+
   return (
     <View style={styles.yearsWrapper}>
-      {guideArray.map(() => (
-        <View key={year} style={styles.yearsRow}>
-          {generateColumns()}
+      {grid.map((rowYears, rowIndex) => (
+        <View key={`year-row-${rowIndex}`} style={styles.yearsRow}>
+          {rowYears.map((y) => (
+            <Year
+              key={y}
+              year={y}
+              currentMonth={currentMonth}
+              currentYear={currentYear}
+              styles={styles}
+              onSelectYear={onSelectYear}
+              minDate={minDate}
+              maxDate={maxDate}
+              textStyle={textStyle}
+              selectedYearStyle={selectedYearStyle}
+              selectedYearTextStyle={selectedYearTextStyle}
+            />
+          ))}
         </View>
       ))}
     </View>
   );
 }
-
-YearsGridView.propTypes = {
-  styles: PropTypes.shape({}),
-  intialYear: PropTypes.number.isRequired,
-  onSelectYear: PropTypes.func,
-};

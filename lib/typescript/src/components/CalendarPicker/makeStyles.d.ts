@@ -214,13 +214,15 @@ export declare function makeStyles(params: any): {
         textAlign: string;
     };
     yearsWrapper: {
+        flex: number;
         alignSelf: string;
         justifyContent: string;
         width: any;
     };
     yearsRow: {
         flexDirection: string;
-        padding: number;
+        paddingVertical: number;
+        paddingHorizontal: number;
     };
 };
 //# sourceMappingURL=makeStyles.d.ts.map
