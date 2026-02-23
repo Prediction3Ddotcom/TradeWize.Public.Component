@@ -120,6 +120,8 @@ export declare class CalendarPicker extends Component<CalendarPickerProps, any> 
             calendar: {
                 height: number;
                 marginTop: number;
+                width: any;
+                overflow: string;
             };
             dayButton: {
                 width: number;

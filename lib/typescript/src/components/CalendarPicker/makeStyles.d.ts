@@ -4,6 +4,8 @@ export declare function makeStyles(params: any): {
     calendar: {
         height: number;
         marginTop: number;
+        width: any;
+        overflow: string;
     };
     dayButton: {
         width: number;

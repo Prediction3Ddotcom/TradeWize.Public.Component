@@ -44,6 +44,8 @@ export function makeStyles(params: any) {
     calendar: {
       height: 320 * scaler,
       marginTop: 10 * scaler,
+      width: containerWidth,
+      overflow: 'hidden',
     },
 
     dayButton: {
