@@ -48,7 +48,7 @@ export const generateThumbnails = async (videoList: FileMessage[]) => {
         });
         return { index, path: result.path };
       } catch (e) {
-        console.error(`Lỗi với video ${video.id}`, e);
+        console.error(`Error generating thumbnail for video ${video.id}`, e);
         return { index, path: '' };
       }
     })
@@ -79,11 +79,9 @@ export const formatDurationSmart = (seconds: number) => {
 
 export const normalizeFileUri = (uri: string): string => {
   if (!uri) return uri;
-  console.log('uri', uri);
 
-  // Loại bỏ mọi tiền tố 'file://' nếu có (đề phòng lỗi)
+  // Remove any existing 'file://' prefix to avoid duplicates
   const cleaned = uri.replace(/^file:\/+/, '');
-  console.log('cleaned', cleaned);
 
   return `file://${cleaned}`;
 };

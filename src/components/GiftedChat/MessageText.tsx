@@ -1,3 +1,4 @@
+import { memo } from 'react';
 import {
   Linking,
   StyleSheet,
@@ -64,7 +65,7 @@ export interface MessageTextProps<TMessage extends IMessage> {
   parsePatterns?: (linkStyle: TextStyle) => [];
 }
 
-export function MessageText<TMessage extends IMessage = IMessage>({
+function MessageTextComponent<TMessage extends IMessage = IMessage>({
   currentMessage = {} as TMessage,
   optionTitles = DEFAULT_OPTION_TITLES,
   position = 'left',
@@ -77,18 +78,7 @@ export function MessageText<TMessage extends IMessage = IMessage>({
 }: MessageTextProps<TMessage>) {
   const { actionSheet } = useChatContext();
 
-  // TODO: React.memo
-  // const shouldComponentUpdate = (nextProps: MessageTextProps<TMessage>) => {
-  //   return (
-  //     !!currentMessage &&
-  //     !!nextProps.currentMessage &&
-  //     currentMessage.text !== nextProps.currentMessage.text
-  //   )
-  // }
-
   const onUrlPress = (url: string) => {
-    // When someone sends a message that includes a website address beginning with "www." (omitting the scheme),
-    // react-native-parsed-text recognizes it as a valid url, but Linking fails to open due to the missing scheme.
     if (WWW_URL_PATTERN.test(url)) onUrlPress(`https://${url}`);
     else
       Linking.openURL(url).catch((e) => {
@@ -149,3 +139,7 @@ export function MessageText<TMessage extends IMessage = IMessage>({
     </View>
   );
 }
+
+export const MessageText = memo(
+  MessageTextComponent
+) as typeof MessageTextComponent;

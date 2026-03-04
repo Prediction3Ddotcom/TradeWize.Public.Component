@@ -1,3 +1,4 @@
+import { memo } from 'react';
 import {
   StyleSheet,
   Text,
@@ -31,7 +32,7 @@ export interface SystemMessageProps<TMessage extends IMessage> {
   children?: React.ReactNode;
 }
 
-export function SystemMessage<TMessage extends IMessage = IMessage>({
+function SystemMessageComponent<TMessage extends IMessage = IMessage>({
   currentMessage,
   containerStyle,
   wrapperStyle,
@@ -58,3 +59,7 @@ export function SystemMessage<TMessage extends IMessage = IMessage>({
     </View>
   );
 }
+
+export const SystemMessage = memo(
+  SystemMessageComponent
+) as typeof SystemMessageComponent;

@@ -16,8 +16,6 @@ export type { SendProps } from './Send';
 export type { SystemMessageProps } from './SystemMessage';
 export type { TimeProps } from './Time';
 
-export type Omit<T, K> = Pick<T, Exclude<keyof T, K>>;
-
 export interface LeftRightStyle<T> {
   left?: StyleProp<T>;
   right?: StyleProp<T>;

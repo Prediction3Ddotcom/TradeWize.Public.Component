@@ -3,7 +3,7 @@ import type { StyleProp, ViewStyle, TextStyle } from 'react-native';
 import type { QuickRepliesProps } from '../QuickReplies';
 import type { MessageTextProps } from '../MessageText';
 import type { TimeProps } from '../Time';
-import type { User, IMessage, LeftRightStyle, Reply, Omit, MessageVideoProps, MessageAudioProps, FileMessage } from '../types';
+import type { User, IMessage, LeftRightStyle, Reply, MessageVideoProps, MessageAudioProps, FileMessage } from '../types';
 export type RenderCustomMessageFileProps<TMessage extends IMessage> = Omit<BubbleProps<TMessage>, 'containerStyle' | 'wrapperStyle'> & MessageVideoProps<TMessage>;
 export type RenderMessageAudioProps<TMessage extends IMessage> = Omit<BubbleProps<TMessage>, 'containerStyle' | 'wrapperStyle'> & MessageAudioProps<TMessage>;
 export type RenderMessageTextProps<TMessage extends IMessage> = Omit<BubbleProps<TMessage>, 'containerStyle' | 'wrapperStyle'> & MessageTextProps<TMessage>;

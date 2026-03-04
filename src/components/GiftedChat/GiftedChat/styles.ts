@@ -6,6 +6,15 @@ export default StyleSheet.create({
   contentContainer: {
     overflow: 'hidden',
   },
+  overlayContainer: {
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    right: 0,
+    bottom: 0,
+    pointerEvents: 'box-none',
+    backgroundColor: 'transparent',
+  },
   headerImageViewer: {
     height: SCREEN_HEIGHT * 0.1,
     justifyContent: 'flex-end',

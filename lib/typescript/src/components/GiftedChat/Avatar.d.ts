@@ -16,5 +16,7 @@ export interface AvatarProps<TMessage extends IMessage> {
     onLongPressAvatar?: (user: User) => void;
     onLayout?: (e: LayoutChangeEvent) => void;
 }
-export declare function Avatar<TMessage extends IMessage = IMessage>(props: AvatarProps<TMessage>): import("react/jsx-runtime").JSX.Element | null;
+declare function AvatarComponent<TMessage extends IMessage = IMessage>(props: AvatarProps<TMessage>): import("react/jsx-runtime").JSX.Element | null;
+export declare const Avatar: typeof AvatarComponent;
+export {};
 //# sourceMappingURL=Avatar.d.ts.map

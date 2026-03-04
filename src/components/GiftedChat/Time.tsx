@@ -6,6 +6,7 @@ import {
   type TextStyle,
 } from 'react-native';
 import dayjs from 'dayjs';
+import { memo } from 'react';
 
 import Color from './Color';
 import { TIME_FORMAT } from './Constant';
@@ -56,7 +57,7 @@ export interface TimeProps<TMessage extends IMessage> {
   timeFormat?: string;
 }
 
-export function Time<TMessage extends IMessage = IMessage>({
+function TimeComponent<TMessage extends IMessage = IMessage>({
   position = 'left',
   containerStyle,
   currentMessage,
@@ -75,3 +76,5 @@ export function Time<TMessage extends IMessage = IMessage>({
     </View>
   );
 }
+
+export const Time = memo(TimeComponent) as typeof TimeComponent;

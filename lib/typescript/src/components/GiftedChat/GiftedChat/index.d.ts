@@ -4,7 +4,6 @@ import Bubble from '../Bubble';
 import { Composer } from '../Composer';
 import { Day } from '../Day';
 import { GiftedAvatar } from '../GiftedAvatar';
-import { InputToolbar } from '../InputToolbar';
 import { LoadEarlier } from '../LoadEarlier';
 import Message from '../Message';
 import MessageContainer from '../MessageContainer';
@@ -21,5 +20,5 @@ declare namespace GiftedChatWrapper {
     var prepend: <TMessage extends IMessage>(currentMessages: TMessage[] | undefined, messages: TMessage[], inverted?: boolean) => TMessage[];
 }
 export * from '../types';
-export { GiftedChatWrapper as GiftedChat, Actions, Avatar, Bubble, SystemMessage, MessageText, Composer, Day, InputToolbar, LoadEarlier, Message, MessageContainer, Send, Time, GiftedAvatar, utils, };
+export { GiftedChatWrapper as GiftedChat, Actions, Avatar, Bubble, SystemMessage, MessageText, Composer, Day, LoadEarlier, Message, MessageContainer, Send, Time, GiftedAvatar, utils, };
 //# sourceMappingURL=index.d.ts.map

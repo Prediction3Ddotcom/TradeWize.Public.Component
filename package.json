@@ -64,6 +64,7 @@
     "@eslint/eslintrc": "^3.3.1",
     "@eslint/js": "^9.35.0",
     "@evilmartians/lefthook": "^1.12.3",
+    "@react-native-clipboard/clipboard": "^1.16.3",
     "@react-native-community/cli": "20.0.1",
     "@react-native/babel-preset": "0.81.1",
     "@react-native/eslint-config": "^0.81.1",
@@ -89,6 +90,7 @@
     "typescript": "^5.9.2"
   },
   "peerDependencies": {
+    "@react-native-clipboard/clipboard": "*",
     "react": "*",
     "react-native": "*",
     "react-native-calendars": "*",

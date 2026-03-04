@@ -11,5 +11,7 @@ export interface MessageTextProps<TMessage extends IMessage> {
     customTextStyle?: StyleProp<TextStyle>;
     parsePatterns?: (linkStyle: TextStyle) => [];
 }
-export declare function MessageText<TMessage extends IMessage = IMessage>({ currentMessage, optionTitles, position, containerStyle, textStyle, linkStyle: linkStyleProp, customTextStyle, parsePatterns, textProps, }: MessageTextProps<TMessage>): import("react/jsx-runtime").JSX.Element;
+declare function MessageTextComponent<TMessage extends IMessage = IMessage>({ currentMessage, optionTitles, position, containerStyle, textStyle, linkStyle: linkStyleProp, customTextStyle, parsePatterns, textProps, }: MessageTextProps<TMessage>): import("react/jsx-runtime").JSX.Element;
+export declare const MessageText: typeof MessageTextComponent;
+export {};
 //# sourceMappingURL=MessageText.d.ts.map

@@ -1,4 +1,4 @@
-import { useMemo } from 'react';
+import { memo, useMemo } from 'react';
 import { Text, View } from 'react-native';
 import dayjs from 'dayjs';
 import relativeTime from 'dayjs/plugin/relativeTime';
@@ -16,7 +16,7 @@ export * from './types';
 dayjs.extend(relativeTime);
 dayjs.extend(calendar);
 
-export function Day({
+function DayComponent({
   dateFormat = DATE_FORMAT,
   dateFormatCalendar,
   createdAt,
@@ -53,3 +53,5 @@ export function Day({
     </View>
   );
 }
+
+export const Day = memo(DayComponent);

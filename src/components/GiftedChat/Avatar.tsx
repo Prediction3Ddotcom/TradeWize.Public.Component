@@ -1,5 +1,4 @@
-/* eslint-disable react-native/no-inline-styles */
-import { type ReactNode, useCallback } from 'react';
+import { type ReactNode, useCallback, memo } from 'react';
 import {
   type ImageStyle,
   type LayoutChangeEvent,
@@ -70,7 +69,7 @@ export interface AvatarProps<TMessage extends IMessage> {
   onLayout?: (e: LayoutChangeEvent) => void;
 }
 
-export function Avatar<TMessage extends IMessage = IMessage>(
+function AvatarComponent<TMessage extends IMessage = IMessage>(
   props: AvatarProps<TMessage>
 ) {
   const {
@@ -90,7 +89,7 @@ export function Avatar<TMessage extends IMessage = IMessage>(
 
   const messageToCompare = renderAvatarOnTop ? previousMessage : nextMessage;
 
-  const renderAvatarComponent = useCallback(() => {
+  const renderAvatarInner = useCallback(() => {
     if (renderAvatar)
       return renderAvatar({
         renderAvatarOnTop,
@@ -157,7 +156,9 @@ export function Avatar<TMessage extends IMessage = IMessage>(
       ]}
       onLayout={onLayout}
     >
-      {renderAvatarComponent()}
+      {renderAvatarInner()}
     </View>
   );
 }
+
+export const Avatar = memo(AvatarComponent) as typeof AvatarComponent;

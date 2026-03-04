@@ -252,7 +252,7 @@ export function MessageFile({
         onSaveThumbnail?.(newArrMedia);
         setArrMedia(newArrMedia);
       } catch (error) {
-        console.log('error fetchData media', error);
+        // Silent fail for thumbnail generation errors
       }
     };
     fetchData();

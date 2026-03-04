@@ -208,13 +208,13 @@ export interface GiftedChatProps<TMessage extends IMessage>
     props: MessageProps<TMessage>,
     nextProps: MessageProps<TMessage>
   ): boolean;
-  //phần này để làm reaction emoji
+  /* Callback for emoji reaction */
   onReactionEmoji?(emoji: string, messageId: string): void;
-  // phần này để làm focus input
+  /* Callback when input is focused */
   onFocusInput?: () => void;
-  // phần này để làm blur input
+  /* Callback when input loses focus */
   onBlurInput?: () => void;
-  // phần này để làm show emoji reaction
+  /* Whether to show emoji reaction UI */
   isShowEmojiReaction?: boolean;
   /* Use ScrollView instead of FlatList for message rendering */
   useScrollView?: boolean;

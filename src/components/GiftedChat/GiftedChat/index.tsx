@@ -1,300 +1,107 @@
-/* eslint-disable react-native/no-inline-styles */
-import {
-  createRef,
-  useEffect,
-  useMemo,
-  useRef,
-  useState,
-  useCallback,
-  type RefObject,
-} from 'react';
-import {
-  ActionSheetProvider,
-  type ActionSheetProviderRef,
-} from '@expo/react-native-action-sheet';
+import { useMemo } from 'react';
+import { ActionSheetProvider } from '@expo/react-native-action-sheet';
 import dayjs from 'dayjs';
 import localizedFormat from 'dayjs/plugin/localizedFormat';
-import {
-  Platform,
-  TextInput,
-  View,
-  Clipboard,
-  ScrollView,
-  type LayoutChangeEvent,
-} from 'react-native';
+import { View } from 'react-native';
 import { Actions } from '../Actions';
 import { Avatar } from '../Avatar';
 import Bubble from '../Bubble';
 import { Composer } from '../Composer';
-import { MAX_COMPOSER_HEIGHT, MIN_COMPOSER_HEIGHT, TEST_ID } from '../Constant';
+import { TEST_ID } from '../Constant';
 import { Day } from '../Day';
 import { GiftedAvatar } from '../GiftedAvatar';
 import { GiftedChatContext } from '../GiftedChatContext';
-import { InputToolbar } from '../InputToolbar';
 import { LoadEarlier } from '../LoadEarlier';
 import Message from '../Message';
-import MessageContainer, { type AnimatedList } from '../MessageContainer';
+import MessageContainer from '../MessageContainer';
 import { MessageText } from '../MessageText';
-import { type FileMessage, type IMessage, type User } from '../types';
+import { type IMessage } from '../types';
 import { Send } from '../Send';
 import { SystemMessage } from '../SystemMessage';
 import { Time } from '../Time';
 import * as utils from '../utils';
-import Animated, {
-  useAnimatedStyle,
-  useAnimatedReaction,
-  useSharedValue,
-  withTiming,
-  runOnJS,
-} from 'react-native-reanimated';
-import {
-  KeyboardProvider,
-  useReanimatedKeyboardAnimation,
-} from 'react-native-keyboard-controller';
+import Animated from 'react-native-reanimated';
+import { KeyboardProvider } from 'react-native-keyboard-controller';
 import { type GiftedChatProps } from './types';
-import ImageView from 'react-native-image-viewing';
 
 import stylesCommon from '../styles';
 import styles from './styles';
-import { MessageWithReaction } from '../MessageWithReaction';
-import { MediaAllShow } from '../MediaAllShow';
-import { generateThumbnails, normalizeFileUri } from '../utils';
-import ImageCropPicker from 'react-native-image-crop-picker';
-import { VideoModal } from '../../VideoModal';
-import { CameraModal } from '../Camera';
-// import ImageDrawingCanvas from '../../ImageDrawingCanvas';
+import { useGiftedChat } from '../hooks/useGiftedChat';
+import { ModalsContainer } from './ModalsContainer';
+import { InputToolbarFragment } from './InputToolbarFragment';
 
 dayjs.extend(localizedFormat);
 
 function GiftedChat<TMessage extends IMessage = IMessage>(
   props: GiftedChatProps<TMessage>
 ) {
+  const { renderLoading, renderChatFooter = null } = props;
+
   const {
-    messages = [],
-    initialText = '',
+    // Refs
+    actionSheetRef,
+    messageContainerRef,
+    textInputRef,
+
+    // State
+    isInitialized,
+    composerHeight,
+    text,
+    isImageViewerVisible,
+    setIsImageViewerVisible,
+    fileSelected,
+    isShowVideoModal,
+    setIsShowVideoModal,
+    isShowCameraModal,
+    setIsShowCameraModal,
+    isTypingDisabled,
+    isMediaAllShow,
+    setIsMediaAllShow,
+    fileMediaAllLocal,
+    arrMessage,
+    messageReaction,
+    setMessageReaction,
+    isModalReaction,
+    setIsModalReaction,
+    messageSelected,
+    fileMedia,
+    setFileMedia,
+
+    // Animated
+    contentStyleAnim,
+
+    // Config
+    inverted,
     isTyping,
-
-    // "random" function from here: https://stackoverflow.com/a/8084248/3452513
-    // we do not use uuid since it would add extra native dependency (https://www.npmjs.com/package/react-native-get-random-values)
-    // lib's user can decide which algorithm to use and pass it as a prop
-    messageIdGenerator = () =>
-      (Math.random() + 1).toString(36).substring(7) + dayjs().valueOf(),
-
-    user = {},
-    onSend,
-    locale = 'en',
-    renderLoading,
-    actionSheet = null,
+    keyboardShouldPersistTaps,
+    useScrollView,
+    isKeyboardInternallyHandled,
+    isShowEmojiReaction,
+    renderInputToolbar,
+    maxInputLength,
+    minComposerHeight,
     textInputProps,
-    renderChatFooter = null,
-    renderInputToolbar = null,
-    bottomOffset = 0,
-    focusOnInputWhenOpeningKeyboard = true,
-    keyboardShouldPersistTaps = Platform.select({
-      ios: 'never',
-      android: 'always',
-      default: 'never',
-    }),
-    onInputTextChanged = null,
-    maxInputLength = null,
-    inverted = true,
-    minComposerHeight = MIN_COMPOSER_HEIGHT,
-    maxComposerHeight = MAX_COMPOSER_HEIGHT,
-    isKeyboardInternallyHandled = true,
-    onReactionEmoji = null,
     labelReaction,
     onFocusInput,
     onBlurInput,
-    isShowEmojiReaction = true,
-    useScrollView = false,
-  } = props;
+    user,
 
-  const actionSheetRef = useRef<ActionSheetProviderRef>(null);
-
-  const messageContainerRef: any = useMemo(
-    () =>
-      props.messageContainerRef ||
-      createRef<AnimatedList<TMessage> | ScrollView>(),
-    [props.messageContainerRef]
-  ) as RefObject<AnimatedList<TMessage> | ScrollView>;
-
-  const textInputRef: any = useMemo(
-    () => props.textInputRef || createRef<TextInput>(),
-    [props.textInputRef]
-  );
-
-  const isTextInputWasFocused = useRef(false);
-
-  const [isInitialized, setIsInitialized] = useState<boolean>(false);
-  const [composerHeight, setComposerHeight] = useState<number>(
-    minComposerHeight!
-  );
-  const [text, setText] = useState<string | undefined>(() => props.text || '');
-  const [isImageViewerVisible, setIsImageViewerVisible] =
-    useState<boolean>(false);
-  const [fileSelected, setFileSelected] = useState<{ uri: string } | null>(
-    null
-  );
-  const [isShowVideoModal, setIsShowVideoModal] = useState<boolean>(false);
-  const [isTypingDisabled, setIsTypingDisabled] = useState<boolean>(false);
-  const [isShowCameraModal, setIsShowCameraModal] = useState<boolean>(false);
-
-  const [isMediaAllShow, setIsMediaAllShow] = useState<boolean>(false);
-  const [fileMediaAllLocal, setFileMediaAllLocal] = useState<IMessage | null>(
-    null
-  );
-  const [arrMessage, setArrMessage] = useState<TMessage[]>(messages);
-  const [messageReaction, setMessageReaction] = useState<
-    (IMessage & { isReply: boolean }) | null
-  >(null);
-
-  const [isModalReaction, setIsModalReaction] = useState<boolean>(false);
-  const [messageSelected, setMessageSelected] = useState<{
-    message: TMessage;
-    position: {
-      x: number;
-      y: number;
-      width: number;
-      height: number;
-      pageX: number;
-      pageY: number;
-    };
-  } | null>(null);
-  const [fileMedia, setFileMedia] = useState<FileMessage[]>([]);
-  // const [fileMediaEdit, setFileMediaEdit] = useState<boolean>(false);
-  // const [fileMediaEditLocal, setFileMediaEditLocal] =
-  //   useState<FileMessage | null>(null);
-  const keyboard = useReanimatedKeyboardAnimation();
-  const trackingKeyboardMovement = useSharedValue(false);
-  const debounceEnableTypingTimeoutId: any =
-    useRef<ReturnType<typeof setTimeout>>(undefined);
-  const keyboardOffsetBottom = useSharedValue(0);
-
-  const contentStyleAnim = useAnimatedStyle(
-    () => ({
-      transform: [
-        { translateY: keyboard.height.value - keyboardOffsetBottom.value },
-      ],
-    }),
-    [keyboard, keyboardOffsetBottom]
-  );
-
-  const getTextFromProp = useCallback(
-    (fallback: string) => {
-      if (props.text === undefined) return fallback;
-
-      return props.text;
-    },
-    [props.text]
-  );
-
-  /**
-   * Store text input focus status when keyboard hide to retrieve
-   * it afterwards if needed.
-   * `onKeyboardWillHide` may be called twice in sequence so we
-   * make a guard condition (eg. showing image picker)
-   */
-  const handleTextInputFocusWhenKeyboardHide = useCallback(() => {
-    if (!isTextInputWasFocused.current)
-      isTextInputWasFocused.current =
-        textInputRef.current?.isFocused() || false;
-  }, [textInputRef]);
-
-  /**
-   * Refocus the text input only if it was focused before showing keyboard.
-   * This is needed in some cases (eg. showing image picker).
-   */
-  const handleTextInputFocusWhenKeyboardShow = useCallback(() => {
-    if (
-      textInputRef.current &&
-      isTextInputWasFocused.current &&
-      !textInputRef.current.isFocused()
-    )
-      textInputRef.current.focus();
-
-    // Reset the indicator since the keyboard is shown
-    isTextInputWasFocused.current = false;
-  }, [textInputRef]);
-
-  const disableTyping = useCallback(() => {
-    clearTimeout(debounceEnableTypingTimeoutId.current);
-    setIsTypingDisabled(true);
-  }, []);
-
-  const enableTyping = useCallback(() => {
-    clearTimeout(debounceEnableTypingTimeoutId.current);
-    setIsTypingDisabled(false);
-  }, []);
-
-  const debounceEnableTyping = useCallback(() => {
-    clearTimeout(debounceEnableTypingTimeoutId.current);
-    debounceEnableTypingTimeoutId.current = setTimeout(() => {
-      enableTyping();
-    }, 50);
-  }, [enableTyping]);
-
-  const scrollToBottom = useCallback(
-    (isAnimated = true) => {
-      if (!messageContainerRef?.current) return;
-
-      // Type-safe check for ScrollView
-      if (
-        'scrollTo' in messageContainerRef.current &&
-        'scrollToEnd' in messageContainerRef.current
-      ) {
-        // ScrollView case
-        const scrollViewRef: any = messageContainerRef.current as ScrollView;
-        if (inverted) {
-          scrollViewRef.scrollTo({
-            y: 0,
-            animated: isAnimated,
-          });
-        } else {
-          scrollViewRef.scrollToEnd({ animated: isAnimated });
-        }
-      } else if ('scrollToOffset' in messageContainerRef.current) {
-        // AnimatedList case
-        const animatedListRef =
-          messageContainerRef.current as AnimatedList<TMessage>;
-        if (inverted) {
-          animatedListRef.scrollToOffset({
-            offset: 0,
-            animated: isAnimated,
-          });
-        } else {
-          if ('scrollToEnd' in animatedListRef) {
-            animatedListRef.scrollToEnd({ animated: isAnimated });
-          }
-        }
-      }
-    },
-    [inverted, messageContainerRef]
-  );
-
-  const handlePressFile = useCallback((file: FileMessage) => {
-    const type = file?.typeFile;
-    switch (type) {
-      case 'video':
-        setFileSelected({
-          uri: file.uri,
-        });
-        setTimeout(() => {
-          setIsShowVideoModal(true);
-        }, 100);
-        break;
-      case 'image':
-        setFileSelected({
-          uri: file.uri,
-        });
-        setTimeout(() => {
-          setIsImageViewerVisible(true);
-        }, 100);
-        break;
-      default:
-        console.log('unknown');
-        break;
-    }
-  }, []);
+    // Handlers
+    getTextFromProp,
+    onInitialLayoutViewLayout,
+    handlePressFile,
+    _onSend,
+    onInputSizeChanged,
+    _onInputTextChanged,
+    onPressPickMedia,
+    handleReactionEmoji,
+    handleActionReaction,
+    onLongPressReaction,
+    onPressFileInContainer,
+    onVideoRecorded,
+    onPhotoCaptured,
+    contextValues,
+  } = useGiftedChat<TMessage>(props);
 
   const renderMessages = useMemo(() => {
     if (!isInitialized) return null;
@@ -313,29 +120,8 @@ function GiftedChat<TMessage extends IMessage = IMessage>(
           forwardRef={messageContainerRef}
           isTyping={isTyping}
           useScrollView={useScrollView}
-          onLongPressReaction={(message, position) => {
-            setMessageSelected({
-              message,
-              position,
-            });
-            setTimeout(() => {
-              setIsModalReaction(true);
-            }, 100);
-          }}
-          onPressFile={(
-            file: FileMessage,
-            isShowAll?: boolean,
-            arrMedia?: IMessage
-          ) => {
-            if (isShowAll) {
-              setFileMediaAllLocal(arrMedia || ({} as IMessage));
-              setTimeout(() => {
-                setIsMediaAllShow(true);
-              }, 100);
-              return;
-            }
-            handlePressFile(file);
-          }}
+          onLongPressReaction={onLongPressReaction}
+          onPressFile={onPressFileInContainer}
         />
         {renderChatFooter?.()}
       </View>
@@ -349,322 +135,10 @@ function GiftedChat<TMessage extends IMessage = IMessage>(
     keyboardShouldPersistTaps,
     messageContainerRef,
     renderChatFooter,
-    handlePressFile,
     useScrollView,
+    onLongPressReaction,
+    onPressFileInContainer,
   ]);
-
-  const notifyInputTextReset = useCallback(() => {
-    onInputTextChanged?.('');
-  }, [onInputTextChanged]);
-
-  const resetInputToolbar = useCallback(() => {
-    textInputRef.current?.clear();
-
-    notifyInputTextReset();
-
-    setComposerHeight(minComposerHeight!);
-    setText(getTextFromProp(''));
-    enableTyping();
-  }, [
-    minComposerHeight,
-    getTextFromProp,
-    textInputRef,
-    notifyInputTextReset,
-    enableTyping,
-  ]);
-
-  const _onSend = useCallback(
-    // eslint-disable-next-line @typescript-eslint/no-shadow
-    (messages: TMessage[] = [], shouldResetInputToolbar = false) => {
-      if (!Array.isArray(messages)) messages = [messages];
-
-      if (!messages[0]?.text && fileMedia?.length <= 0) return;
-
-      const convertFileMedia = fileMedia?.map((item) => {
-        return {
-          ...item,
-          uri: item?.uri || '',
-          thumbnailPreview: item?.thumbnailPreview || '',
-          mine: utils.getFileTypeFromPath(item?.uri || ''),
-        };
-      });
-
-      const newMessages: TMessage[] = messages?.map((message) => {
-        return {
-          ...message,
-          user: user!,
-          createdAt: new Date(),
-          _id: messageIdGenerator?.(),
-          file: convertFileMedia,
-        };
-      });
-
-      if (shouldResetInputToolbar === true) {
-        disableTyping();
-        resetInputToolbar();
-      }
-
-      setFileMedia([]);
-      let newMessagesWithReaction = newMessages;
-
-      if (messageReaction && messageReaction?.isReply) {
-        newMessagesWithReaction = newMessages.map((message) => {
-          return { ...message, messageReply: messageReaction };
-        });
-      }
-
-      setMessageReaction(null);
-      onSend?.(newMessagesWithReaction);
-
-      setTimeout(() => scrollToBottom(), 10);
-    },
-    [
-      onSend,
-      user,
-      messageIdGenerator,
-      fileMedia,
-      disableTyping,
-      resetInputToolbar,
-      scrollToBottom,
-      messageReaction,
-    ]
-  );
-
-  const onInputSizeChanged = useCallback(
-    (size: { height: number }) => {
-      const newComposerHeight = Math.max(
-        minComposerHeight!,
-        Math.min(maxComposerHeight!, size.height)
-      );
-
-      setComposerHeight(newComposerHeight);
-    },
-    [maxComposerHeight, minComposerHeight]
-  );
-
-  const _onInputTextChanged = useCallback(
-    (_text: string) => {
-      if (isTypingDisabled) return;
-
-      onInputTextChanged?.(_text);
-
-      // Only set state if it's not being overridden by a prop.
-      if (props.text === undefined) setText(_text);
-    },
-    [onInputTextChanged, isTypingDisabled, props.text]
-  );
-
-  const onPressPickMedia = useCallback(
-    async (type: 'camera' | 'pick') => {
-      if (type === 'camera') {
-        setIsShowCameraModal(true);
-      } else {
-        const result = await ImageCropPicker.openPicker({
-          multiple: true,
-        });
-        const fileMediaAll = result?.map((item) => {
-          const uri = item.path || item.sourceURL;
-
-          return {
-            uri: uri,
-            id: dayjs().valueOf().toString() + item?.filename,
-            size: item?.size || 0,
-            name: item?.filename || '',
-            fileExtension: `.${uri?.split('.').pop()}` || '',
-            typeFile: 'image',
-            thumbnailPreview: uri,
-            width: item?.width,
-            height: item?.height,
-          };
-        });
-
-        setFileMedia([...fileMedia, ...fileMediaAll] as FileMessage[]);
-      }
-    },
-    [fileMedia]
-  );
-
-  const onInitialLayoutViewLayout = useCallback(
-    (e: LayoutChangeEvent) => {
-      if (isInitialized) return;
-
-      const { layout } = e.nativeEvent;
-
-      if (layout.height <= 0) return;
-
-      notifyInputTextReset();
-
-      setIsInitialized(true);
-      setComposerHeight(minComposerHeight!);
-      setText(getTextFromProp(initialText));
-    },
-    [
-      isInitialized,
-      initialText,
-      minComposerHeight,
-      notifyInputTextReset,
-      getTextFromProp,
-    ]
-  );
-
-  const inputToolbarFragment = useMemo(() => {
-    if (!isInitialized) return null;
-
-    const inputToolbarProps = {
-      ...props,
-      text: getTextFromProp(text!),
-      composerHeight: Math.max(minComposerHeight!, composerHeight),
-      onSend: _onSend,
-      onInputSizeChanged,
-      onTextChanged: _onInputTextChanged,
-      textInputProps: {
-        ...textInputProps,
-        ref: textInputRef,
-        maxLength: isTypingDisabled ? 0 : maxInputLength,
-      },
-    };
-
-    if (renderInputToolbar) return renderInputToolbar(inputToolbarProps);
-
-    return (
-      <InputToolbar
-        // onEditFileImage={(file: FileMessage) => {
-        //   setFileMediaEdit(true);
-        //   setFileMediaEditLocal(file);
-        // }}
-        isMe={(user as User)?._id === messageReaction?.user?._id}
-        onFocusInput={onFocusInput}
-        onBlurInput={onBlurInput}
-        labelReaction={labelReaction}
-        messageReaction={messageReaction as IMessage & { isReply: boolean }}
-        clearMessageReaction={() => setMessageReaction(null)}
-        onRemoveFile={(file: FileMessage) => {
-          const newFileMedia = fileMedia.filter((item) => item.id !== file.id);
-          setFileMedia(newFileMedia);
-        }}
-        onPressFile={(file: FileMessage) => {
-          handlePressFile(file);
-        }}
-        fileMedia={fileMedia}
-        onPressPickMedia={onPressPickMedia}
-        disableComposer={props.disableComposer}
-        {...inputToolbarProps}
-      />
-    );
-  }, [
-    isInitialized,
-    _onSend,
-    getTextFromProp,
-    maxInputLength,
-    minComposerHeight,
-    onInputSizeChanged,
-    props,
-    text,
-    renderInputToolbar,
-    composerHeight,
-    isTypingDisabled,
-    textInputRef,
-    textInputProps,
-    _onInputTextChanged,
-    onPressPickMedia,
-    fileMedia,
-    handlePressFile,
-    messageReaction,
-    labelReaction,
-    onFocusInput,
-    onBlurInput,
-    user,
-  ]);
-
-  const handleReactionEmoji = useCallback(
-    (emoji: string, messageId: string) => {
-      onReactionEmoji?.(emoji, messageId);
-    },
-    [onReactionEmoji]
-  );
-
-  const handleActionReaction = useCallback(
-    (message: IMessage, action: string) => {
-      switch (action) {
-        case 'reply':
-          setMessageReaction({ ...message, isReply: true });
-          break;
-        case 'copy':
-          Clipboard.setString(message.text || '');
-          break;
-        case 'other':
-          // setMessageReaction({ ...message, isOther: true });
-          break;
-        default:
-          setMessageReaction(null);
-      }
-    },
-    []
-  );
-
-  const contextValues = useMemo(
-    () => ({
-      actionSheet:
-        actionSheet ||
-        (() => ({
-          showActionSheetWithOptions:
-            actionSheetRef.current!.showActionSheetWithOptions,
-        })),
-      getLocale: () => locale,
-    }),
-    [actionSheet, locale]
-  );
-
-  useEffect(() => {
-    if (props.text != null) setText(props.text);
-  }, [props.text]);
-
-  useEffect(() => {
-    const prepareMessage = inverted ? messages : [...messages].reverse();
-    setArrMessage(prepareMessage);
-  }, [messages, inverted]);
-
-  useAnimatedReaction(
-    () => -keyboard.height.value,
-    (value, prevValue) => {
-      if (prevValue !== null && value !== prevValue) {
-        const isKeyboardMovingUp = value > prevValue;
-        if (isKeyboardMovingUp !== trackingKeyboardMovement.value) {
-          trackingKeyboardMovement.value = isKeyboardMovingUp;
-          keyboardOffsetBottom.value = withTiming(
-            isKeyboardMovingUp ? bottomOffset : 0,
-            {
-              // If `bottomOffset` exists, we change the duration to a smaller value to fix the delay in the keyboard animation speed
-              duration: bottomOffset ? 150 : 400,
-            }
-          );
-
-          if (focusOnInputWhenOpeningKeyboard)
-            if (isKeyboardMovingUp)
-              runOnJS(handleTextInputFocusWhenKeyboardShow)();
-            else runOnJS(handleTextInputFocusWhenKeyboardHide)();
-
-          if (value === 0) {
-            runOnJS(enableTyping)();
-          } else {
-            runOnJS(disableTyping)();
-            runOnJS(debounceEnableTyping)();
-          }
-        }
-      }
-    },
-    [
-      keyboard,
-      trackingKeyboardMovement,
-      focusOnInputWhenOpeningKeyboard,
-      handleTextInputFocusWhenKeyboardHide,
-      handleTextInputFocusWhenKeyboardShow,
-      enableTyping,
-      disableTyping,
-      debounceEnableTyping,
-      bottomOffset,
-    ]
-  );
 
   return (
     <GiftedChatContext.Provider value={contextValues}>
@@ -682,103 +156,54 @@ function GiftedChat<TMessage extends IMessage = IMessage>(
               ]}
             >
               {renderMessages}
-              {inputToolbarFragment}
-              <View
-                style={{
-                  position: 'absolute',
-                  top: 0,
-                  left: 0,
-                  right: 0,
-                  bottom: 0,
-                  pointerEvents: 'box-none',
-                  backgroundColor: 'transparent',
-                }}
-              >
-                <ImageView
-                  images={fileSelected ? [{ uri: fileSelected.uri }] : []}
-                  imageIndex={0}
-                  visible={isImageViewerVisible}
-                  onRequestClose={() => setIsImageViewerVisible(false)}
-                />
-                <VideoModal
-                  txtSkipButton={'X'}
-                  visible={isShowVideoModal}
-                  onClose={() => setIsShowVideoModal(false)}
-                  subtitle={{}}
-                  source={fileSelected?.uri || ''}
-                  autoPlay={true}
-                  isProgressBar={false}
-                />
-                <MessageWithReaction
-                  isShowEmoji={isShowEmojiReaction}
-                  onReactionEmoji={handleReactionEmoji}
-                  onActionReaction={handleActionReaction}
-                  user={user as User}
-                  isVisible={isModalReaction}
-                  onClose={() => setIsModalReaction(false)}
-                  message={messageSelected?.message || ({} as TMessage)}
-                  position={messageSelected?.position || ({} as any)}
-                />
-                <MediaAllShow
-                  fileMediaAll={fileMediaAllLocal}
-                  isVisible={isMediaAllShow}
-                  onClose={() => setIsMediaAllShow(false)}
-                  onPressFile={(file) => {
-                    setIsMediaAllShow(false);
-                    setTimeout(() => {
-                      handlePressFile(file);
-                    }, 350);
-                  }}
-                />
-                <CameraModal
-                  mode="both"
-                  isCanPause={false}
-                  onVideoRecorded={async (video) => {
-                    const getThumbnail = await generateThumbnails([
-                      {
-                        uri: normalizeFileUri(video.path),
-                        id: dayjs().valueOf().toString(),
-                        size: video?.size || 0,
-                      },
-                    ]);
-                    setIsShowCameraModal(false);
-                    const videoFile = {
-                      uri: normalizeFileUri(video.path),
-                      id: dayjs().valueOf().toString(),
-                      size: video?.size || 0,
-                      name:
-                        video?.path?.split('/').pop() ||
-                        `video - ${dayjs().valueOf().toString()}`,
-                      fileExtension: `.${video?.path?.split('.').pop()}`,
-                      typeFile: 'video',
-                      width: video?.width,
-                      height: video?.height,
-                      duration: video?.duration,
-                      thumbnailPreview: getThumbnail[0]?.path || '',
-                    };
-
-                    setFileMedia([...fileMedia, videoFile as FileMessage]);
-                  }}
-                  onPhotoCaptured={(photo) => {
-                    setIsShowCameraModal(false);
-
-                    const img = {
-                      uri: normalizeFileUri(photo.path),
-                      id: dayjs().valueOf().toString(),
-                      size: photo?.size || 0,
-                      name:
-                        photo?.path?.split('/').pop() ||
-                        `image - ${dayjs().valueOf().toString()}`,
-                      fileExtension: `.${photo?.path?.split('.').pop()}`,
-                      typeFile: 'image',
-                      thumbnailPreview: normalizeFileUri(photo?.path || ''),
-                      width: photo?.width,
-                      height: photo?.height,
-                    };
-                    setFileMedia([...fileMedia, img as FileMessage]);
-                  }}
-                  visible={isShowCameraModal}
-                  onClose={() => setIsShowCameraModal(false)}
+              <InputToolbarFragment<TMessage>
+                isInitialized={isInitialized}
+                props={props}
+                getTextFromProp={getTextFromProp}
+                text={text}
+                composerHeight={composerHeight}
+                minComposerHeight={minComposerHeight!}
+                _onSend={_onSend}
+                onInputSizeChanged={onInputSizeChanged}
+                _onInputTextChanged={_onInputTextChanged}
+                textInputProps={textInputProps}
+                textInputRef={textInputRef}
+                isTypingDisabled={isTypingDisabled}
+                maxInputLength={maxInputLength}
+                renderInputToolbar={renderInputToolbar}
+                user={user}
+                messageReaction={messageReaction}
+                setMessageReaction={setMessageReaction}
+                fileMedia={fileMedia}
+                setFileMedia={setFileMedia}
+                handlePressFile={handlePressFile}
+                onPressPickMedia={onPressPickMedia}
+                labelReaction={labelReaction}
+                onFocusInput={onFocusInput}
+                onBlurInput={onBlurInput}
+              />
+              <View style={styles.overlayContainer}>
+                <ModalsContainer<TMessage>
+                  isImageViewerVisible={isImageViewerVisible}
+                  fileSelected={fileSelected}
+                  setIsImageViewerVisible={setIsImageViewerVisible}
+                  isShowVideoModal={isShowVideoModal}
+                  setIsShowVideoModal={setIsShowVideoModal}
+                  isShowEmojiReaction={isShowEmojiReaction}
+                  isModalReaction={isModalReaction}
+                  setIsModalReaction={setIsModalReaction}
+                  messageSelected={messageSelected}
+                  user={user}
+                  handleReactionEmoji={handleReactionEmoji}
+                  handleActionReaction={handleActionReaction}
+                  isMediaAllShow={isMediaAllShow}
+                  setIsMediaAllShow={setIsMediaAllShow}
+                  fileMediaAllLocal={fileMediaAllLocal}
+                  handlePressFile={handlePressFile}
+                  isShowCameraModal={isShowCameraModal}
+                  setIsShowCameraModal={setIsShowCameraModal}
+                  onVideoRecorded={onVideoRecorded}
+                  onPhotoCaptured={onPhotoCaptured}
                 />
               </View>
             </Animated.View>
@@ -836,7 +261,6 @@ export {
   MessageText,
   Composer,
   Day,
-  InputToolbar,
   LoadEarlier,
   Message,
   MessageContainer,

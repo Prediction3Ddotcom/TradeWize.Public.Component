@@ -2814,6 +2814,23 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@react-native-clipboard/clipboard@npm:^1.16.3":
+  version: 1.16.3
+  resolution: "@react-native-clipboard/clipboard@npm:1.16.3"
+  peerDependencies:
+    react: ">= 16.9.0"
+    react-native: ">= 0.61.5"
+    react-native-macos: ">= 0.61.0"
+    react-native-windows: ">= 0.61.0"
+  peerDependenciesMeta:
+    react-native-macos:
+      optional: true
+    react-native-windows:
+      optional: true
+  checksum: 3d9944fc2c4acbecf917e752cc36ec92c4dcdb590c94c81c78c24df9ddd4b02448e252eb39e0949000b01046cfdfe2b03e1676c5e3ac0fe7eb3bf6b649970c27
+  languageName: node
+  linkType: hard
+
 "@react-native-community/blur@npm:^4.4.1":
   version: 4.4.1
   resolution: "@react-native-community/blur@npm:4.4.1"
@@ -11977,6 +11994,7 @@ __metadata:
     "@evilmartians/lefthook": ^1.12.3
     "@expo/react-native-action-sheet": ^4.1.1
     "@hortau/react-native-wheel-picker-android": "git+https://github.com/thanhthai198/ReactNativeWheelPicker.git"
+    "@react-native-clipboard/clipboard": ^1.16.3
     "@react-native-community/blur": ^4.4.1
     "@react-native-community/cli": 20.0.1
     "@react-native-community/datetimepicker": 8.4.4
@@ -12029,6 +12047,7 @@ __metadata:
     turbo: ^2.5.6
     typescript: ^5.9.2
   peerDependencies:
+    "@react-native-clipboard/clipboard": "*"
     react: "*"
     react-native: "*"
     react-native-calendars: "*"

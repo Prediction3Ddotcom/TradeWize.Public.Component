@@ -8,7 +8,6 @@ import type {
   IMessage,
   LeftRightStyle,
   Reply,
-  Omit,
   MessageVideoProps,
   MessageAudioProps,
   FileMessage,

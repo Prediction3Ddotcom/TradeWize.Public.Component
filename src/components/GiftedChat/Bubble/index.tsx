@@ -1,6 +1,4 @@
-/* eslint-disable react-native/no-inline-styles */
 /* eslint-disable @typescript-eslint/no-shadow */
-/* eslint-disable @typescript-eslint/no-unused-vars */
 import { useCallback, useRef, useState } from 'react';
 import type { JSX } from 'react';
 import {
@@ -83,8 +81,8 @@ const Bubble = <TMessage extends IMessage = IMessage>(
         options,
         cancelButtonIndex,
       },
-      (buttonIndex: number) => {
-        console.log('onLongPress', { buttonIndex });
+      (_buttonIndex: number) => {
+        // No-op: action sheet selection
       }
     );
   }, [currentMessage, context, props]);
@@ -117,7 +115,7 @@ const Bubble = <TMessage extends IMessage = IMessage>(
         }
       }
     } catch (error) {
-      console.log('onLongPressItem', error);
+      // Silent fail for measure errors
     }
   }, [currentMessage, onLongPressReaction]);
 
@@ -152,7 +150,7 @@ const Bubble = <TMessage extends IMessage = IMessage>(
 
   const renderQuickReplies = useCallback(() => {
     if (currentMessage?.quickReplies) {
-      const { containerStyle, wrapperStyle, ...quickReplyProps } = props;
+      const { ...quickReplyProps } = props;
 
       if (props.renderQuickReplies)
         return props.renderQuickReplies(quickReplyProps);
@@ -188,12 +186,7 @@ const Bubble = <TMessage extends IMessage = IMessage>(
 
   const renderMessageText = useCallback(() => {
     if (currentMessage?.text) {
-      const {
-        containerStyle,
-        wrapperStyle,
-        optionTitles,
-        ...messageTextProps
-      } = props;
+      const { ...messageTextProps } = props;
 
       if (props.renderMessageText)
         return props.renderMessageText(messageTextProps);
@@ -206,10 +199,10 @@ const Bubble = <TMessage extends IMessage = IMessage>(
   const renderMessageFile = useCallback(() => {
     if (!currentMessage?.file) return null;
 
-    const { containerStyle, wrapperStyle, ...messageFileProps } = props;
+    const { ...messageFileProps } = props;
 
     if (props.renderCustomMessageFile)
-      return props.renderCustomMessageFile(messageFileProps);
+      return props.renderCustomMessageFile(messageFileProps as any);
 
     return (
       <MessageFile
@@ -337,26 +330,9 @@ const Bubble = <TMessage extends IMessage = IMessage>(
       return (
         <View
           style={[
+            styles.content.reactionEmojiContainer,
             {
-              backgroundColor: Color.white,
-              position: 'absolute',
-              minWidth: 36,
               width: 18 * reactionEmoji?.length + 12,
-              height: 18,
-              borderRadius: 12,
-              justifyContent: 'center',
-              alignItems: 'center',
-              borderWidth: 1,
-              borderColor: Color.leftBubbleBackground,
-              bottom: -32,
-              zIndex: 10,
-              shadowColor: Color.leftBubbleBackground,
-              shadowOffset: { width: 0, height: 1 },
-              shadowOpacity: 0.25,
-              shadowRadius: 3.84,
-              elevation: 3,
-              flexDirection: 'row',
-              gap: 2,
             },
             reactionPosition === 'right' && {
               left: reactionEmoji?.length
@@ -371,11 +347,11 @@ const Bubble = <TMessage extends IMessage = IMessage>(
           ]}
         >
           {reactionEmoji?.map((item, index) => (
-            <Text key={index} style={{ fontSize: 10 }}>
+            <Text key={index} style={styles.content.reactionEmojiText}>
               {item as string}
             </Text>
           ))}
-          <Text style={{ fontSize: 12 }}>
+          <Text style={styles.content.reactionEmojiCount}>
             {currentMessage?.reactionEmoji?.length}
           </Text>
         </View>
@@ -423,7 +399,10 @@ const Bubble = <TMessage extends IMessage = IMessage>(
         stylesCommon.fill,
         styles[position as 'left' | 'right'].container,
         containerStyle && containerStyle[position],
-        { marginBottom: currentMessage?.isLast ? 12 : 8, maxWidth: '90%' },
+        currentMessage?.isLast
+          ? styles.content.containerLastMargin
+          : styles.content.containerDefaultMargin,
+        styles.content.containerMaxWidth,
       ]}
       onLayout={(e) => {
         if (currentMessage?._id) {
@@ -464,9 +443,8 @@ const Bubble = <TMessage extends IMessage = IMessage>(
                 styles[position as 'left' | 'right'].bottom,
                 bottomContainerStyle?.[position],
                 currentMessage?.reactionEmoji &&
-                  currentMessage?.reactionEmoji?.length > 0 && {
-                    marginBottom: 8,
-                  },
+                  currentMessage?.reactionEmoji?.length > 0 &&
+                  styles.content.reactionMarginBottom,
               ]}
             >
               {renderUsername()}
@@ -478,14 +456,7 @@ const Bubble = <TMessage extends IMessage = IMessage>(
       </View>
       {renderQuickReplies()}
       {currentMessage?.isSending && (
-        <View
-          style={{
-            height: 16,
-            alignItems: 'center',
-            justifyContent: 'center',
-            paddingHorizontal: 8,
-          }}
-        >
+        <View style={styles.content.sendingIndicator}>
           <MaterialIndicator
             color={Color.defaultColor}
             size={12}
@@ -494,21 +465,12 @@ const Bubble = <TMessage extends IMessage = IMessage>(
         </View>
       )}
       {currentMessage?.errorMessage && !currentMessage?.isSending && (
-        <View
-          style={{
-            marginTop: 4,
-            flexDirection: 'row',
-            alignItems: 'center',
-            gap: 4,
-          }}
-        >
+        <View style={styles.content.errorContainer}>
           <FastImage
             source={require('../assets/warning.png')}
-            style={{ width: 12, height: 12 } as any}
+            style={styles.content.errorIcon as any}
           />
-          <Text
-            style={{ fontSize: 12, fontWeight: '500', color: Color.alizarin }}
-          >
+          <Text style={styles.content.errorText}>
             {currentMessage?.errorMessage}
           </Text>
         </View>
